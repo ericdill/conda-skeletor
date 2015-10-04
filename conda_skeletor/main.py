@@ -29,6 +29,9 @@ import yaml
 NPY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}py{{ py }}"
 PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
+package_mapping = {
+    'skimage': 'scikit-image'
+}
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
 
@@ -242,6 +245,7 @@ def execute(args, parser):
                                             setup_deps=setup_deps,
                                             user_config=skeletor_config)
 
+    # remove self-references
     try:
         runtime_deps.remove(template_info['packagename'])
     except ValueError:
@@ -250,6 +254,16 @@ def execute(args, parser):
         test_requires.remove(template_info['packagename'])
     except ValueError:
         pass
+
+    # remap deps
+    for k, v in package_mapping.items():
+        if k in runtime_deps:
+            runtime_deps.remove(k)
+            runtime_deps.append(v)
+        if k in test_requires:
+            test_requires.remove(k)
+            test_requires.append(v)
+
     template_info['run_requirements'] = runtime_deps
     template_info['test_requires'] = test_requires
 
