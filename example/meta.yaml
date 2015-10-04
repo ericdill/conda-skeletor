@@ -23,9 +23,25 @@ requirements:
     - setuptools
   run:
     - python
-    
+    - lmfit
+    - netCDF4
+    - numpy
+    - pyFAI
+    - scipy
+    - six
+    - skxray
+    - src
+    - xraylib
 
 test:
+  
+  requires:
+    - nose
+    - numpy
+    - scipy
+    - six
+    - skimage
+    - skxray
   
 
   

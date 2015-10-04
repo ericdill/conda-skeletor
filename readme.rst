@@ -102,9 +102,9 @@ Notes
 
 ``test:``
 
-- **import_deps** list. The list of imports required to successfully execute
+- **test_requires** list. The list of imports required to successfully execute
   the test(s)
-- **import_modules** list. The list of modules to import in the test suite to
+- **test_test_imports** list. The list of modules to import in the test suite to
   test to make sure that the package was correctly built
 - **test_commands** list. The list of test scripts to be executed
 

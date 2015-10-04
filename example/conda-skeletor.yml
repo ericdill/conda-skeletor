@@ -1,6 +1,13 @@
-ignore_path:
-  - /doc/
+ignore_path_regex:
+  - .*(doc).*
+
+include_path_regex:
+  - .*(skxray).*
+
+test_regex:
+  - .*(test).*
 
 blacklist_packages:
   - setupext
   - versioneer
+  - ctrans

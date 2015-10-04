@@ -30,11 +30,11 @@ def categorize_deps(iterate_over_library_output,
     build = []
 
     for module_dep_info in iterate_over_library_output:
-        build_deps = is_build_callable(module_dep_info)
+        build_requirements = is_build_callable(module_dep_info)
         runtime_deps = is_runtime_callable(module_dep_info)
         testing_deps = is_testing_callable(module_dep_info)
 
-        build.extend(build_deps)
+        build.extend(build_requirements)
         runtime.extend(runtime_deps)
         testing.extend(testing_deps)
 

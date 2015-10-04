@@ -17,26 +17,22 @@ build:
 
 requirements:
   build:
-    - python{{ python_version_build }}{% for build_dep in build_deps %}
+    - python{{ python_version_build }}{% for build_dep in build_requirements %}
     - {{ build_dep }}{% endfor %}
   run:
-    - python{{ python_version_build }}
-    {% for run_dep in run_deps %}
-    - {{ run_dep }}
-    {% endfor %}
+    - python{{ python_version_build }}{% for run_dep in run_requirements %}
+    - {{ run_dep }}{% endfor %}
 
 test:
-  {% if import_deps %}
-  requires:
-    {% for import_dep in import_deps %}
-    - {{ import_dep }}
-    {% endfor %}
+  {% if test_requires %}
+  requires:{% for test_require in test_requires %}
+    - {{ test_require }}{% endfor %}
   {% endif %}
 
-  {% if import_modules %}
+  {% if test_imports %}
   imports:
-    {% for import_module in import_modules %}
-    - {{ import_module }}
+    {% for test_import in test_imports %}
+    - {{ test_import }}
     {% endfor %}
   {% endif %}
 

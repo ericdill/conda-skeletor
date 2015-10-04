@@ -18,6 +18,7 @@ from conda.cli.conda_argparse import ArgumentParser
 from jinja2 import Environment, FileSystemLoader
 import whatsmyversion
 import os
+import re
 import depfinder
 from . import setup_parser
 from pprint import pprint as print
@@ -72,6 +73,64 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
 
     execute(args, p)
 
+
+def _regex_tester(test_string, regexers):
+    """Helper function to test a string against an iterable of regexers"""
+    matched = False
+    for regex in regexers:
+        if regex.__class__.__name__ == 'SRE_Pattern':
+            matched = regex.match(test_string) is not None
+        else:
+            matched = regex in test_string
+        if matched:
+            break
+    return matched
+
+
+def split_deps(iterable_of_deps_tuples, iterable_of_regexers):
+    good = []
+    bad = []
+    for mod, mod_path, catcher in iterable_of_deps_tuples:
+        # try the module name first
+        mod_match = _regex_tester(mod, iterable_of_regexers)
+        if not mod_match:
+            # if the module name did not match, try the full path
+            mod_match = _regex_tester(mod_path, iterable_of_regexers)
+        if mod_match:
+            good.append((mod, mod_path, catcher))
+            mod_match = False
+        else:
+            bad.append((mod, mod_path, catcher))
+
+    return good, bad
+
+
+def get_runtime_deps(iterable_of_deps_tuples, blacklisted_packages=None):
+    """Find the runtime dependencies
+
+    Parameters
+    ----------
+    iterable_of_deps_tuples : Iterable
+    Should be an iterable where each element is a tuple/list with
+    (module_name, full_module_path, depfinder.ImportCatcher)
+    user_config : dict
+    Dictionary read in from conda-skeletor.yml
+
+    Returns
+    -------
+    list
+    List of runtime dependencies
+    """
+    if blacklisted_packages is None:
+        blacklisted_packages = []
+    runtime_deps = set()
+    for mod_name, path_to_module, catcher in iterable_of_deps_tuples:
+        for mod in catcher.required_modules.union(catcher.sketchy_modules):
+            if mod in blacklisted_packages:
+                continue
+            runtime_deps.add(mod)
+    return sorted(list(runtime_deps))
+
 def construct_template_info(repo_path, setup_info, user_config=None,
                             setup_deps=None):
     if setup_deps is None:
@@ -99,14 +158,14 @@ def construct_template_info(repo_path, setup_info, user_config=None,
 
     # allow the user to overwrite the build number
     template_info['build_number'] = user_config.get('build_number', 0)
-    build_deps = setup_deps.get('required', {})
+    build_requirements = setup_deps.get('required', {})
     # remove blacklisted packages from the build
-    build_deps = [dep for dep in build_deps
+    build_requirements = [dep for dep in build_requirements
                   if dep not in user_config.get('blacklist_packages', [])]
     # add the build deps to the template info
-    template_info['build_deps'] = build_deps
+    template_info['build_requirements'] = build_requirements
 
-    if 'numpy' in build_deps:
+    if 'numpy' in build_requirements:
         build_string = NPY_BUILD_STRING
     else:
         build_string = PY_BUILD_STRING
@@ -129,22 +188,33 @@ def execute(args, parser):
 
     # find the dependencies for all modules in the source directory
     repo_deps = depfinder.iterate_over_library(args.source)
-    # drop any deps that contain something in 'ignore_path'
-    cleaned_deps = deque()
-    ignore = False
-    for mod_name, full_path, mod_deps in repo_deps:
-        for ignore_pattern in skeletor_config['ignore_path']:
-            if ignore_pattern in full_path:
-                ignore = True
-        if ignore:
-            ignore = False
-            print('skipping = %s' % full_path)
-            continue
-        cleaned_deps.append((mod_name, full_path, mod_deps))
-        print('path = %s' % full_path)
+
+    # Compile the regexers listed in the conda-skeleton.yml
+    test_regexers = [re.compile(reg) for reg in skeletor_config.get('test_regex', [])]
+    ignore_path_regexers = [re.compile(reg) for reg in skeletor_config.get('ignore_path_regex', [])]
+    include_path_regexers = [re.compile(reg) for reg in skeletor_config.get('include_path_regex', [])]
+    ignored, without_ignored = split_deps(repo_deps, ignore_path_regexers)
+    included, without_included = split_deps(without_ignored, include_path_regexers)
+    tests, without_tests = split_deps(included, test_regexers)
+
+    # find the runtime deps
+    runtime_deps = get_runtime_deps(
+        without_tests,
+        blacklisted_packages=skeletor_config.get('blacklist_packages')
+    )
+    print('runtime_deps')
+    print(runtime_deps)
+
+    # find the testing time deps
+    test_requires = get_runtime_deps(
+        tests,
+        blacklisted_packages=skeletor_config.get('blacklist_packages')
+    )
+    print('test time deps')
+    print(test_requires)
 
     setup_info = None
-    for mod_name, full_path, mod_deps in cleaned_deps:
+    for mod_name, full_path, mod_deps in without_ignored:
         if('setup.py' in full_path):
             setup_info = (mod_name, full_path, mod_deps)
 
@@ -171,7 +241,8 @@ def execute(args, parser):
                                             setup_deps=setup_deps,
                                             user_config=skeletor_config)
 
-    # add the run time deps to the template
+    template_info['run_requirements'] = runtime_deps
+    template_info['test_requires'] = test_requires
 
     print('template_info')
     print(template_info)
