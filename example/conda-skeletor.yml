@@ -1,8 +1,10 @@
 ignore_path_regex:
   - .*(doc).*
+  - .*(examples).*
+  - .*(versioneer).*
 
 include_path_regex:
-  - .*(skxray).*
+  - .*(metadatastore).*
 
 test_regex:
   - .*(test).*

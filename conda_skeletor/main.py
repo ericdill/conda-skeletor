@@ -241,8 +241,19 @@ def execute(args, parser):
                                             setup_deps=setup_deps,
                                             user_config=skeletor_config)
 
+    try:
+        runtime_deps.remove(template_info['packagename'])
+    except ValueError:
+        pass
+    try:
+        test_requires.remove(template_info['packagename'])
+    except ValueError:
+        pass
     template_info['run_requirements'] = runtime_deps
     template_info['test_requires'] = test_requires
+
+    if 'test_imports' not in template_info:
+        template_info['test_imports'] = [template_info['packagename']]
 
     print('template_info')
     print(template_info)
