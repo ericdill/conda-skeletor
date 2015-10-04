@@ -4,7 +4,7 @@ ignore_path_regex:
   - .*(versioneer).*
 
 include_path_regex:
-  - .*(metadatastore).*
+  - .*(skxray).*
 
 test_regex:
   - .*(test).*
@@ -13,3 +13,7 @@ blacklist_packages:
   - setupext
   - versioneer
   - ctrans
+  - skxray
+  - src
+  - netCDF4
+  - pyFAI
