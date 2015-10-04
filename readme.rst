@@ -21,18 +21,19 @@ compatible with multiple versions of other libraries
 This (at least for now) does not solve **that** particular problem (at least
 automagically).
 
-So, what does ``conda-skeletor`` do?  `conda-skeletor path-to-codebase` will
+So, what does ``conda-skeletor`` do?  Executing `conda-skeletor path-to-codebase` will:
 
-1. use `depfinder <https://github.com/ericdill/depfinder>`_ to
-  1. Parse your (Python!) codebase and find all imports
-  1. Split those imports based on if they are:
-    - **builtins** (using `stdlib-list <https://github.com/jackmaney/python-stdlib-list>`_)
-    - **relative imports** (just in case you're curious?)
-    - **questionable imports** if they are wrapped in a try/except block (That, I
-      cannot determine how to handle without input from you)
-    - **required imports** if they are at the top level of your module
-    - **optional imports** if they are found inside a function
-1. Create a meta.yaml file based on this information (plus a little bit of
+#. Parse your (Python!) codebase and find all imports
+#. Split those imports based on if they are:
+
+  - **builtins** (using `stdlib-list <https://github.com/jackmaney/python-stdlib-list>`_)
+  - **relative imports** (just in case you're curious?)
+  - **questionable imports** if they are wrapped in a try/except block (That, I
+    cannot determine how to handle without input from you)
+  - **required imports** if they are at the top level of your module
+  - **optional imports** if they are found inside a function
+
+#. Create a meta.yaml file based on this information (plus a little bit of
    extra information that you provide via a conda-skeletor.yml file)
 
 
