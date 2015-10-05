@@ -17,7 +17,6 @@ from __future__ import print_function, absolute_import, division
 # from conda.cli.conda_argparse import ArgumentParser
 from argparse import ArgumentParser
 from jinja2 import Environment, FileSystemLoader
-import whatsmyversion
 import os
 import re
 import depfinder
@@ -154,7 +153,7 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     template_info = {}
     template_info['packagename'] = user_config.get('name', setup_info.get('name', ''))
     print('setuppy_path = %s' % repo_path)
-    version_string = whatsmyversion.git_describe(repo_path, 'v', '.post')
+    version_string = git.git_describe(repo_path, 'v', '.post')
     import subprocess
     if '.post' in version_string:
         full_hash = subprocess.check_output(['git', "rev-parse", "HEAD"],

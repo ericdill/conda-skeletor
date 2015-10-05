@@ -23,5 +23,4 @@ setup(
             'conda-skeletor = conda_skeletor.main:main',
         ],
     },
-
 )
