@@ -1,0 +1,17 @@
+ignore_path_regex:
+  - .*(doc).*
+  - .*(example).*
+  - .*(version).*
+
+include_path_regex:
+  - .*(metadatastore/metadatastore).*
+
+test_regex:
+  - .*(test).*
+
+blacklist_packages:
+  - versioneer
+  # shipped with pymongo
+  - bson
+
+generate_test_suite: True
