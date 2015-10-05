@@ -21,6 +21,7 @@ import whatsmyversion
 import os
 import re
 import depfinder
+import pandas as pd
 from . import setup_parser
 from pprint import pprint as print
 from collections import deque
@@ -30,7 +31,8 @@ NPY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}py{{ py }}"
 PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
 package_mapping = {
-    'skimage': 'scikit-image'
+    'scikit-image': 'skimage',
+
 }
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
@@ -181,6 +183,25 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     template_info['license'] = setup_info['license']
     return template_info
 
+def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
+    print('finding test imports')
+    paths = []
+    def into_importable(full_module_path, lib_name):
+        relative_module_path = full_module_path.split(lib_name, maxsplit=1)[1]
+        # trim the '.py'
+        relative_module_path = relative_module_path[:-3]
+        # add the library name back in
+        relative_module_path = lib_name + relative_module_path
+        importable_path = '.'.join(relative_module_path.split(os.sep))
+        # turn imports from 'foo.bar.baz.__init__' into 'foo.bar.baz'
+        if importable_path.endswith('__init__'):
+            importable_path = importable_path[:-9]
+        # turn the string from path/to/module to path.to.module
+        return importable_path
+    all_imports = [into_importable(full_path, importable_lib_name)
+                   for mod_name, full_path, catcher in iterable_of_deps_tuples]
+    return sorted(all_imports)
+
 def execute(args, parser):
     print("I'm supposed to make a meta.yaml file now.")
     print('args = %s' % args)
@@ -201,6 +222,33 @@ def execute(args, parser):
     included, without_included = split_deps(without_ignored, include_path_regexers)
     tests, without_tests = split_deps(included, test_regexers)
 
+    def find_lib_name(without_tests):
+        """Helper function to find the library name from all non-test modules
+
+        Parameters
+        ----------
+        without_tests : iterable of (mod_name, full_path, ImportCatcher) tuples
+            Pass in the second return argument from `split_deps`
+
+        Returns
+        -------
+        str
+            The name of the library (hopefully!)
+        """
+        non_test_paths = [full_path for mod_name, full_path, catcher in without_tests]
+        non_test_paths = [path.split(os.sep) for path in non_test_paths]
+        df = pd.DataFrame(non_test_paths)
+        prev_col_name = None
+        equivalent = True
+        for col_name in df:
+            equivalent = not any([val != df[col_name][0] for val in df[col_name]])
+            if not equivalent:
+                break
+            prev_col_name = col_name
+
+        return df[prev_col_name][0]
+
+    importable_lib_name = find_lib_name(without_tests)
     # find the runtime deps
     runtime_deps = get_runtime_deps(
         without_tests,
@@ -268,7 +316,8 @@ def execute(args, parser):
     template_info['test_requires'] = test_requires
 
     if 'test_imports' not in template_info:
-        template_info['test_imports'] = [template_info['packagename']]
+        template_info['test_imports'] = find_test_imports(importable_lib_name,
+                                                          without_tests)
 
     print('template_info')
     print(template_info)
