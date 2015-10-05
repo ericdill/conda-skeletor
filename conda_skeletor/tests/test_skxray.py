@@ -12,7 +12,8 @@ SKELETOR_CONFIG_PATH = None
 
 def setup_module():
     global OUTPUT_DIR, SOURCE_DIR, TARGET_META_YAML, SKELETOR_CONFIG_PATH
-    with open(os.path.join(os.path.dirname(__file__), 'test_data', 'skxray.meta.yaml')) as f:
+    with open(os.path.join(os.path.dirname(__file__), 'test_data',
+                           'skxray.meta.yaml')) as f:
         TARGET_META_YAML = f.read()
     SKELETOR_CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'test_data',
                                         'skxray.conda-skeletor.yml')
