@@ -1,2 +1,2 @@
 #!/bin/bash
-py.test test.py --cov conda-skeletor --cov-report html -sv
+py.test conda_skeletor --cov conda-skeletor --cov-report html -svv

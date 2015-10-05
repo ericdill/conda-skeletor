@@ -55,7 +55,7 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
     p.add_argument(
         "--output-dir",
         action='store',
-        nargs=1,
+        nargs='?',
         help="Directory to write recipes to (default: %(default)s).",
         default=".",
     )
@@ -68,7 +68,7 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
     p.add_argument(
         "--skeletor-config",
         action="store",
-        nargs=1,
+        nargs='?',
         help=("Directory which contains the 'skeletor.yml' configuration file "
               "(default: %(default)s). WARNING: ABSOLUTE PATHS ONLY!"),
         default='conda-skeletor.yml',
