@@ -31,7 +31,8 @@ NPY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}py{{ py }}"
 PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
 package_mapping = {
-    'scikit-image': 'skimage',
+    'skimage': 'scikit-image',
+    'netCDF4': 'netcdf4',
 
 }
 
