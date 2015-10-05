@@ -219,7 +219,11 @@ def execute(args, parser):
     test_regexers = [re.compile(reg) for reg in skeletor_config.get('test_regex', [])]
     ignore_path_regexers = [re.compile(reg) for reg in skeletor_config.get('ignore_path_regex', [])]
     include_path_regexers = [re.compile(reg) for reg in skeletor_config.get('include_path_regex', [])]
+    extra_setup_regexers = [re.compile(reg) for reg in skeletor_config.get('extra_setup_files_regex', [])]
+    print('extra_setup_regexers')
+    print(extra_setup_regexers)
     ignored, without_ignored = split_deps(repo_deps, ignore_path_regexers)
+    setup_files, _ = split_deps(repo_deps, extra_setup_regexers)
     included, without_included = split_deps(without_ignored, include_path_regexers)
     tests, without_tests = split_deps(included, test_regexers)
 
@@ -282,11 +286,13 @@ def execute(args, parser):
     # grab the code out of the setup.py file to find its deps so that I can
     # parse the code for imports
     setup_deps = None
-    with open(setup_info[1], 'r') as f:
-        code = f.read()
-        setup_deps = depfinder.get_imported_libs(code).describe()
-        print('setup_deps')
-        print(setup_deps)
+    code = ''
+    for mod_name, full_path, catcher in setup_files:
+        with open(full_path, 'r') as f:
+            code += f.read()
+    setup_deps = depfinder.get_imported_libs(code).describe()
+    print('setup_deps')
+    print(setup_deps)
     # create the git repo path so that I can determine the version string from
     # the source code
     git_repo_path = os.path.dirname(setup_info[1])
