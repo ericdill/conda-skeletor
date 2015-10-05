@@ -24,8 +24,9 @@ before_install:
 
 install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
-  - conda install --yes pytest jinja2 pyyaml
-  - conda install --yes -c ericdill whatsmyversion
+  - conda config --add channels ericdill
+  - conda create -n testenv --yes pytest jinja2 pyyaml whatsmyversion
+  - source activate testenv
   - pip install codecov pytest-cov
   - pip install https://github.com/ericdill/depfinder/zipball/master#egg=depfinder
   - python setup.py install
