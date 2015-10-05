@@ -211,16 +211,22 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
     return sorted(all_imports)
 
 def execute(args, parser):
+    """To match the API of conda-build"""
     print("I'm supposed to make a meta.yaml file now.")
     print('args = %s' % args)
+    execute_programmatically(args.skeletor_config, args.source,
+                             args.output_dir)
 
-    with open(args.skeletor_config) as f:
+
+def execute_programmatically(skeletor_config_path, source_path, output_dir):
+
+    with open(skeletor_config_path) as f:
         skeletor_config = yaml.load(f.read())
 
     print('loaded config = %s' % skeletor_config)
 
     # find the dependencies for all modules in the source directory
-    repo_deps = list(depfinder.iterate_over_library(args.source))
+    repo_deps = list(depfinder.iterate_over_library(source_path))
 
     # Compile the regexers listed in the conda-skeleton.yml
     test_regexers = [re.compile(reg) for reg in skeletor_config.get('test_regex', [])]
@@ -336,7 +342,7 @@ def execute(args, parser):
     tmplt_dir = os.path.join(conda_skeletor_content, 'templates')
     # create the jinja environment
     jinja_env = Environment(loader=FileSystemLoader([
-        os.path.join(args.output_dir, 'conda-recipe'),
+        os.path.join(output_dir, 'conda-recipe'),
         tmplt_dir
     ]))
 
@@ -349,10 +355,10 @@ def execute(args, parser):
 
     template = jinja_env.get_template('meta.tmpl')
     # template.render(**setup_info)
-    meta_fname = os.path.join(args.output_dir, 'meta.yaml')
+    meta_fname = os.path.join(output_dir, 'meta.yaml')
     with open(meta_fname, 'w') as f:
         f.write(template.render(**template_info))
 
-    build_bash_fname = os.path.join(args.output_dir, 'build.sh')
+    build_bash_fname = os.path.join(output_dir, 'build.sh')
     with open(build_bash_fname, 'w') as f:
         f.write(DEFAULT_BUILD_BASH)
