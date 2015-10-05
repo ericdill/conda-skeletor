@@ -213,7 +213,7 @@ def execute(args, parser):
     print('loaded config = %s' % skeletor_config)
 
     # find the dependencies for all modules in the source directory
-    repo_deps = depfinder.iterate_over_library(args.source)
+    repo_deps = list(depfinder.iterate_over_library(args.source))
 
     # Compile the regexers listed in the conda-skeleton.yml
     test_regexers = [re.compile(reg) for reg in skeletor_config.get('test_regex', [])]
