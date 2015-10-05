@@ -28,9 +28,7 @@ test:
   requires:{% for test_require in test_requires %}
     - {{ test_require }}{% endfor %}
   {% endif %}
-
-  {% if test_imports %}
-  imports:{% for test_import in test_imports %}
+  {% if test_imports %}imports:{% for test_import in test_imports %}
     - {{ test_import }}{% endfor %}
   {% endif %}
 
