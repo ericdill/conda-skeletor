@@ -21,7 +21,6 @@ import whatsmyversion
 import os
 import re
 import depfinder
-import pandas as pd
 from . import setup_parser
 from pprint import pprint as print
 from collections import deque
@@ -241,17 +240,8 @@ def execute(args, parser):
             The name of the library (hopefully!)
         """
         non_test_paths = [full_path for mod_name, full_path, catcher in without_tests]
-        non_test_paths = [path.split(os.sep) for path in non_test_paths]
-        df = pd.DataFrame(non_test_paths)
-        prev_col_name = None
-        equivalent = True
-        for col_name in df:
-            equivalent = not any([val != df[col_name][0] for val in df[col_name]])
-            if not equivalent:
-                break
-            prev_col_name = col_name
-
-        return df[prev_col_name][0]
+        common_path = os.path.commonprefix(non_test_paths)
+        return common_path.strip(os.sep).split(os.sep)[-1]
 
     importable_lib_name = find_lib_name(without_tests)
     skeletor_config['blacklist_packages'].append(importable_lib_name)
