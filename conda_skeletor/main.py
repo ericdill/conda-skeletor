@@ -26,6 +26,10 @@ from pprint import pprint as print
 from collections import deque
 import yaml
 
+DEFAULT_BUILD_BASH = """#!/bin/bash
+$PYTHON setup.py build
+$PYTHON setup.py install"""
+
 NPY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}py{{ py }}"
 PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
@@ -336,6 +340,10 @@ def execute(args, parser):
 
     template = jinja_env.get_template('meta.tmpl')
     # template.render(**setup_info)
-    target_fname = os.path.join(args.output_dir, 'meta.yaml')
-    with open(target_fname, 'w') as fh:
-        fh.write(template.render(**template_info))
+    meta_fname = os.path.join(args.output_dir, 'meta.yaml')
+    with open(meta_fname, 'w') as f:
+        f.write(template.render(**template_info))
+
+    build_bash_fname = os.path.join(args.output_dir, 'build.sh')
+    with open(build_bash_fname, 'w') as f:
+        f.write(DEFAULT_BUILD_BASH)
