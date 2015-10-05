@@ -339,12 +339,10 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     print('template_info')
     print(template_info)
     # load and render the template
-    tmplt_dir = os.path.join(conda_skeletor_content, 'templates')
+    template_dir = os.path.join(conda_skeletor_content, 'templates')
+    print('template directory = %s' % template_dir)
     # create the jinja environment
-    jinja_env = Environment(loader=FileSystemLoader([
-        os.path.join(output_dir, 'conda-recipe'),
-        tmplt_dir
-    ]))
+    jinja_env = Environment(loader=FileSystemLoader(template_dir))
 
     if skeletor_config.get('generate_test_suite', 'False'):
         if 'nose' in test_requires:
