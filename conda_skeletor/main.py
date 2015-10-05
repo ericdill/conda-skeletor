@@ -254,6 +254,7 @@ def execute(args, parser):
         return df[prev_col_name][0]
 
     importable_lib_name = find_lib_name(without_tests)
+    skeletor_config['blacklist_packages'].append(importable_lib_name)
     # find the runtime deps
     runtime_deps = get_runtime_deps(
         without_tests,
