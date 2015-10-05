@@ -3,6 +3,9 @@ ignore_path_regex:
   - .*(examples).*
   - .*(versioneer).*
 
+extra_setup_files_regex:
+  - .*(/scikit-xray/setup).*
+
 include_path_regex:
   - .*(skxray).*
 
@@ -13,7 +16,5 @@ blacklist_packages:
   - setupext
   - versioneer
   - ctrans
-  - skxray
   - src
-  - netCDF4
   - pyFAI
