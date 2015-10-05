@@ -15,10 +15,19 @@ matrix:
     - python: 2.6
     - python: 2.7
 
+before_install:
+  # - wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p /home/travis/mc
+  - export PATH=/home/travis/mc/bin:$PATH
+
 install:
-  - pip install pytest codecov pytest-cov jinja2 pyyaml
-  - pip install https://github.com/ericdill/whatsmyversion/master#egg=whatsmyversion
-  - pip install https://github.com/ericdill/depfinder/master#egg=depfinder
+  - export GIT_FULL_HASH=`git rev-parse HEAD`
+  - conda install --yes pytest jinja2 pyyaml
+  - conda install --yes -c ericdill whatsmyversion
+  - pip install codecov pytest-cov
+  - pip install https://github.com/ericdill/depfinder/zipball/master#egg=depfinder
   - python setup.py install
 
 script:
