@@ -2,11 +2,29 @@ import ast
 
 
 def parse(path_to_setuppy):
+    """Helper function to gather information from setup.py
+
+    Parameters
+    ----------
+    path_to_setuppy : list
+        Path to setup.py file.
+        e.g. '/home/edill/dev/conda/conda-skeletor/setup.py'
+
+    Returns
+    -------
+    dict
+        Dictionary keyed on the kwargs that get passed to the setup() function
+        inside of setup.py
+    """
     with open(path_to_setuppy, 'r') as f:
         code = f.read()
     tree = ast.parse(code)
     scraper = SetupScraper()
-    scraper.visit(tree)
+    try:
+        scraper.visit(tree)
+    except IndexError:
+        print('setup.py scaping failed')
+        raise
     # info = {v[0]: v[1:] if len(v) == 2 else v[1]
     #         for v in scraper.setup_info}
     info = {}

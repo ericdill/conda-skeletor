@@ -152,7 +152,7 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     if user_config is None:
         user_config = {}
     template_info = {}
-    template_info['packagename'] = setup_info['name']
+    template_info['packagename'] = user_config.get('name', setup_info.get('name', ''))
     print('setuppy_path = %s' % repo_path)
     version_string = whatsmyversion.git_describe(repo_path, 'v', '.post')
     import subprocess
@@ -168,7 +168,7 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     if version_string:
         template_info['git'] = True
         # allow the user to overwrite the source url
-        template_info['source_url'] = user_config.get('url', setup_info['url'])
+        template_info['source_url'] = user_config.get('url', setup_info.get('url', ''))
 
     # allow the user to overwrite the build number
     template_info['build_number'] = user_config.get('build_number', 0)
@@ -188,7 +188,7 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     template_info['build_string'] = user_config.get('build_string', build_string)
     # allow the user to overwrite the home url
     template_info['home_url'] = user_config.get('home_url', template_info['source_url'])
-    template_info['license'] = setup_info['license']
+    template_info['license'] = setup_info.get('license', '')
     return template_info
 
 def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
@@ -275,9 +275,14 @@ def execute(args, parser):
             setup_info = (mod_name, full_path, mod_deps)
 
     if setup_info:
-        setup_info_dict = setup_parser.parse(setup_info[1])
-        print('setup_info\n')
-        print(setup_info_dict)
+        try:
+            setup_info_dict = setup_parser.parse(setup_info[1])
+            print('setup_info\n')
+            print(setup_info_dict)
+        except IndexError:
+            # Occurs when setup.py has a call like setup(**kwargs). Looking at
+            # you pims...
+            setup_info_dict = {}
     else:
         print("No setup.py file found. Is this a python project?")
         raise
