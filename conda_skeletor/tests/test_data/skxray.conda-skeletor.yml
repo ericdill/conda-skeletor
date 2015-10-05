@@ -1,0 +1,22 @@
+ignore_path_regex:
+  - .*(doc).*
+  - .*(examples).*
+  - .*(versioneer).*
+
+extra_setup_files_regex:
+  - .*(/scikit-xray/setup).*
+
+include_path_regex:
+  - .*(skxray).*
+
+test_regex:
+  - .*(test).*
+
+blacklist_packages:
+  - setupext
+  - versioneer
+  - ctrans
+  - src
+  - pyFAI
+
+generate_test_suite: True
