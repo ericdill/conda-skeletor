@@ -19,24 +19,28 @@ build:
 requirements:
   build:
     - python
-    - setuptools
     - numpy
+    - setuptools
+    - six
   run:
     - python
     - lmfit
+    - netcdf4
     - numpy
     - scipy
     - six
     - xraylib
 
 test:
-  
   requires:
     - nose
     - numpy
+    - scikit-image
     - scipy
     - six
-    - skimage
+  
+  commands:
+    - nosetests -v skxray
   
   imports:
     - skxray
@@ -76,9 +80,6 @@ test:
     - skxray.io.net_cdf_io
     - skxray.io.save_powder_output
   
-
-  
-
 about:
   home: http://github.com/scikit-xray/scikit-xray
   license: BSD
