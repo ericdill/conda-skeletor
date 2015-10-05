@@ -1,0 +1,1 @@
+recursive-include conda_skeletor/templates *.tmpl
