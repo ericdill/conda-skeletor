@@ -1,0 +1,16 @@
+ignore_path_regex:
+  - .*(doc).*
+  - .*(examples).*
+  - .*(versioneer).*
+
+include_path_regex:
+  - .*(conda_skeletor).*
+
+test_regex:
+  - .*(test).*
+
+blacklist_packages:
+  - setupext
+  - versioneer
+
+generate_test_suite: True
