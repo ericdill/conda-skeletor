@@ -36,7 +36,11 @@ PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 package_mapping = {
     'skimage': 'scikit-image',
     'netCDF4': 'netcdf4',
-
+    'PIL': 'pillow',
+    'IPython': 'ipython',
+    'av': 'pyav',
+    'cv2': 'opencv',
+    'yaml': 'pyyaml',
 }
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
