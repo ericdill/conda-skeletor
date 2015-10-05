@@ -24,11 +24,11 @@ before_install:
 
 install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
-  - conda config --add channels ericdill
-  - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION pytest jinja2 pyyaml whatsmyversion
+  - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION pytest jinja2 pyyaml
   - source activate testenv
   - pip install codecov pytest-cov
   - pip install https://github.com/ericdill/depfinder/zipball/master#egg=depfinder
+  - pip install https://github.com/ericdill/whatsmyversion/zipball/master#egg=whatsmyversion
   - python setup.py install
 
 script:
