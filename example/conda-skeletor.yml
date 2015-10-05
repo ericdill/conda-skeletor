@@ -18,3 +18,5 @@ blacklist_packages:
   - ctrans
   - src
   - pyFAI
+
+generate_test_suite: True
