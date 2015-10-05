@@ -1,0 +1,20 @@
+ignore_path_regex:
+  - .*(doc).*
+  - .*(examples).*
+  - .*(versioneer).*
+
+include_path_regex:
+  - .*(pims).*
+
+test_regex:
+  - .*(test).*
+
+blacklist_packages:
+  - versioneer
+  - jpype
+
+generate_test_suite: True
+
+name: pims
+url: https://github.com/soft-matter/pims
+license: GPLv3
