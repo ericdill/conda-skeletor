@@ -327,6 +327,13 @@ def execute(args, parser):
         tmplt_dir
     ]))
 
+    if skeletor_config.get('generate_test_suite', 'False'):
+        if 'nose' in test_requires:
+            template_info['test_commands'] = ['nosetests -v %s' % importable_lib_name]
+        elif 'pytest' in test_requires:
+            template_info['test_commands'] = ['py.test -v %s' % importable_lib_name]
+
+
     template = jinja_env.get_template('meta.tmpl')
     # template.render(**setup_info)
     target_fname = os.path.join(args.output_dir, 'meta.yaml')
