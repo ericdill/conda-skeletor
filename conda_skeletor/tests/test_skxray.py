@@ -38,11 +38,10 @@ def teardown_module():
 
 def test_skxray_meta_generation():
     global OUTPUT_DIR, SOURCE_DIR
-    conda_skeletor.execute_programmatically(
-        '/home/edill/dev/conda/conda-skeletor/example/conda-skeletor.yml',
-        SOURCE_DIR,
-        OUTPUT_DIR
-    )
+    skeletor_file = os.path.join(os.path.dirname(__file__), 'test_data',
+                                 'skxray.conda-skeletor.yml')
+    conda_skeletor.execute_programmatically(skeletor_file, SOURCE_DIR,
+                                            OUTPUT_DIR)
     with open(os.path.join(OUTPUT_DIR, 'meta.yaml'), 'r') as f:
         generated_meta_yaml = f.read()
     assert generated_meta_yaml == TARGET_META_YAML
