@@ -19,6 +19,7 @@ from argparse import ArgumentParser
 from jinja2 import Environment, FileSystemLoader
 import os
 import re
+from collections import defaultdict
 from . import git
 import depfinder
 from . import setup_parser

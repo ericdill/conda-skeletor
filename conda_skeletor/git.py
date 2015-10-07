@@ -2,7 +2,6 @@ import subprocess
 import logging
 logger = logging.getLogger(__name__)
 
-
 def git_describe(git_root, version_prefix, version_suffix, use_local_version_id=False):
     git_describe_cmd = ['git', 'describe', '--dirty', '--long', '--always', '--tags']
     desc = subprocess.check_output(git_describe_cmd, cwd=git_root).strip()

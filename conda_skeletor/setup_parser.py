@@ -4,6 +4,12 @@ import pprint
 import logging
 logger = logging.getLogger(__name__)
 
+SETUP_FUNCTION_NAMES = [
+    'setup',
+    # if setuptools.setup() is the function call. occurs in
+    # https://github.com/jackmaney/python-stdlib-list
+    'setuptools',
+]
 
 def parse(path_to_setuppy):
     """Helper function to gather information from setup.py
@@ -68,15 +74,22 @@ class SetupScraper(ast.NodeVisitor):
     def visit_Call(self, node):
         if self.in_setup:
             self.setup_info[-1].append(node)
-        if isinstance(node.func, ast.Name) and node.func.id == 'setup':
+        if ((isinstance(node.func, ast.Name) and node.func.id == 'setup') or
+            (isinstance(node.func, ast.Attribute) and node.func.attr == 'setup')):
+            logger.debug('entering setup function')
             self.in_setup = True
         logger.debug(pprint.pformat(vars(node)))
         self.generic_visit(node)
-        if isinstance(node.func, ast.Name) and node.func.id == 'setup':
+        if ((isinstance(node.func, ast.Name) and node.func.id == 'setup') or
+            (isinstance(node.func, ast.Attribute) and node.func.attr == 'setup')):
+            logger.debug('leaving setup function')
             self.in_setup = False
 
     def visit_Name(self, node):
-        if node.id == 'setup':
+        logger.debug('node info = %s' % vars(node))
+        if node.id in SETUP_FUNCTION_NAMES:
+            logger.debug('in setup function, skipping the name visitor for '
+                         'node.id=%s' % node.id)
             return
         if self.in_setup:
             self.setup_info[-1].append(node.id)
