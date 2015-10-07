@@ -2,7 +2,8 @@
     :target: https://travis-ci.org/ericdill/conda-skeletor
 .. image:: http://codecov.io/github/ericdill/conda-skeletor/coverage.svg?branch=master
     :target: http://codecov.io/github/ericdill/conda-skeletor?branch=master
-
+.. image:: https://coveralls.io/repos/ericdill/conda-skeletor/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/ericdill/conda-skeletor?branch=master
 
 conda-skeletor
 --------------
