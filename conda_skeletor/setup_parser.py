@@ -1,4 +1,8 @@
 import ast
+import pdb
+import pprint
+import logging
+logger = logging.getLogger(__name__)
 
 
 def parse(path_to_setuppy):
@@ -18,13 +22,17 @@ def parse(path_to_setuppy):
     """
     with open(path_to_setuppy, 'r') as f:
         code = f.read()
+    # pdb.set_trace()
     tree = ast.parse(code)
     scraper = SetupScraper()
-    try:
-        scraper.visit(tree)
-    except IndexError:
-        print('setup.py scaping failed')
-        raise
+    logger.debug("\nScraping setup.py\n"
+                   "-----------------")
+    # try:
+    scraper.visit(tree)
+    # except IndexError as ie:
+    #     pdb.set_trace()
+    #     logger.debug('setup.py scaping failed -- %s' % ie)
+    #     raise
     # info = {v[0]: v[1:] if len(v) == 2 else v[1]
     #         for v in scraper.setup_info}
     info = {}
@@ -53,6 +61,7 @@ class SetupScraper(ast.NodeVisitor):
 
     def visit_keyword(self, node):
         if self.in_setup:
+            logger.debug('Adding kwarg=%s to setup info' % node.arg)
             self.setup_info.append([node.arg])
         self.visit(node.value)
 
@@ -61,14 +70,17 @@ class SetupScraper(ast.NodeVisitor):
             self.setup_info[-1].append(node)
         if isinstance(node.func, ast.Name) and node.func.id == 'setup':
             self.in_setup = True
+        logger.debug(pprint.pformat(vars(node)))
         self.generic_visit(node)
         if isinstance(node.func, ast.Name) and node.func.id == 'setup':
             self.in_setup = False
+
     def visit_Name(self, node):
         if node.id == 'setup':
             return
         if self.in_setup:
             self.setup_info[-1].append(node.id)
+
     def visit_Str(self, node):
         if self.in_setup:
             self.setup_info[-1].append(node.s)
