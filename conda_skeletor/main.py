@@ -223,7 +223,7 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
     logger.info('finding test imports')
     paths = []
     def into_importable(full_module_path, lib_name):
-        relative_module_path = full_module_path.split(lib_name, maxsplit=1)[1]
+        relative_module_path = full_module_path.split(lib_name)[-1]
         # trim the '.py'
         relative_module_path = relative_module_path[:-3]
         # add the library name back in
