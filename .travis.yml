@@ -25,7 +25,7 @@ install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
   - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION jinja2 pyyaml nose
   - source activate testenv
-  - pip install codecov
+  - pip install codecov coveralls
   - pip install https://github.com/ericdill/depfinder/zipball/master#egg=depfinder
   - python setup.py install
 
@@ -34,3 +34,4 @@ script:
 
 after_success:
   - codecov
+  - coveralls
