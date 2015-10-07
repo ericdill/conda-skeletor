@@ -25,8 +25,7 @@ def setup_module():
     git_rev = '7d6d0b5919d48df4b9f733c3112b344135eab701'
 
     tempdir = tempfile.gettempdir()
-    OUTPUT_DIR = tempfile.TemporaryDirectory().name
-    os.mkdir(OUTPUT_DIR)
+    OUTPUT_DIR = tempfile.mkdtemp()
     SOURCE_DIR = os.path.join(tempdir, git_url.strip('/').split('/')[-1])
 
     # clone the git repo to the target directory
