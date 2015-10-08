@@ -23,7 +23,7 @@ def setup_module():
     # git_rev = target['source']['git_rev']
     # git_url = target['source']['git_url']
     git_url = 'http://github.com/ericdill/depfinder'
-    git_rev = '56452cccb676ab73c96eb8a00f883c99f081fb7e'
+    git_rev = 'a8f3529b5a59e7ecac4e293f5d441622cf8bd6a3'
 
     tempdir = tempfile.gettempdir()
     OUTPUT_DIR = tempfile.mkdtemp()
