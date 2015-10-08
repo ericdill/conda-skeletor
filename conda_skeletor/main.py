@@ -218,7 +218,8 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     template_info['build_string'] = user_config.get('build_string', build_string)
     # allow the user to overwrite the home url
     template_info['home_url'] = user_config.get('home_url', template_info['source_url'])
-    template_info['license'] = setup_info.get('license', '')
+    # raise if there is no license in either the setup_info or the user_config
+    template_info['license'] = setup_info.get('license', user_config['license'])
     return template_info
 
 def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
