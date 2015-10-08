@@ -1,3 +1,4 @@
+"""Main module in conda-skeletor."""
 # conda-skeletor
 # Copyright (C) 2015 Eric Dill
 #
@@ -284,11 +285,11 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     logger.info('extra_setup_regexers = %s' % extra_setup_regexers)
 
     ignored, without_ignored = split_deps(repo_deps, ignore_path_regexers)
-    setup_files, _ = split_deps(repo_deps, extra_setup_regexers)
+    setup_files, non_setup_files = split_deps(without_ignored, extra_setup_regexers)
     if include_path_regexers:
-        included, without_included = split_deps(without_ignored, include_path_regexers)
+        included, without_included = split_deps(non_setup_files, include_path_regexers)
     else:
-        included = without_ignored
+        included = non_setup_files
         without_included = None
     tests, without_tests = split_deps(included, test_regexers)
     logger.info('\nSplitting up the modules\n'
