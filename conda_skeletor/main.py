@@ -45,6 +45,7 @@ package_mapping = {
     'av': 'pyav',
     'cv2': 'opencv',
     'yaml': 'pyyaml',
+    'stdlib_list': 'stdlib-list',
 }
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
