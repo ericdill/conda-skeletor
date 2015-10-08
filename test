@@ -1,2 +1,2 @@
 #!/bin/bash
-nosetests conda_skeletor --with-coverage -v --cover-package conda_skeletor
+py.test conda_skeletor --cov conda_skeletor --cov-report html -svv
