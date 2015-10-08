@@ -284,7 +284,11 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
 
     ignored, without_ignored = split_deps(repo_deps, ignore_path_regexers)
     setup_files, _ = split_deps(repo_deps, extra_setup_regexers)
-    included, without_included = split_deps(without_ignored, include_path_regexers)
+    if include_path_regexers:
+        included, without_included = split_deps(without_ignored, include_path_regexers)
+    else:
+        included = without_ignored
+        without_included = None
     tests, without_tests = split_deps(included, test_regexers)
     logger.info('\nSplitting up the modules\n'
             '------------------------')
@@ -297,9 +301,10 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     logger.info('Included')
     included_paths = [p[1] for p in included]
     logger.info(pprint.pformat(included_paths))
-    logger.info('Excluded')
-    excluded_paths = [p[1] for p in without_included]
-    logger.info(pprint.pformat(excluded_paths))
+    if without_included:
+        logger.info('Excluded')
+        excluded_paths = [p[1] for p in without_included]
+        logger.info(pprint.pformat(excluded_paths))
     logger.info('Test files')
     test_paths = [p[1] for p in tests]
     logger.info(pprint.pformat(test_paths))
