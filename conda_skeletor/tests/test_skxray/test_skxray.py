@@ -12,10 +12,11 @@ SKELETOR_CONFIG_PATH = None
 
 def setup_module():
     global OUTPUT_DIR, SOURCE_DIR, TARGET_META_YAML, SKELETOR_CONFIG_PATH
-    with open(os.path.join(os.path.dirname(__file__), 'test_data',
+    with open(os.path.join(os.path.dirname(__file__),
                            'skxray.meta.yaml')) as f:
         TARGET_META_YAML = f.read()
-    SKELETOR_CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'test_data',
+    SKELETOR_CONFIG_PATH = os.path.join(os.path.dirname(__file__),
+
                                         'skxray.conda-skeletor.yml')
     #TODO grab the url/rev out of the target meta. It fails now because of jinja templating being in the yaml
     # target = yaml.load(TARGET_META)
