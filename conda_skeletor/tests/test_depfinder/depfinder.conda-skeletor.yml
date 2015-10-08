@@ -1,0 +1,17 @@
+ignore_path_regex:
+  - .*(doc).*
+
+test_regex:
+  - .*(test).*
+
+# consider renaming to 'source_dir_names'
+include_path_regex:
+  - .*(depfinder).*
+
+extra_setup_files_regex:
+  - .*(setup).*
+
+generate_test_suite: True
+
+blacklist_packages:
+  - find_with_code
