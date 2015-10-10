@@ -66,10 +66,18 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
         default=".",
     )
     p.add_argument(
-        "source",
+        "-p", "--path",
         action="store",
-        nargs='?',
-        help="Directory of source code from which I should generate a meta.yaml",
+        nargs='1',
+        help=("Directory of source code from which I should generate a "
+              "meta.yaml",)
+    )
+    p.add_argument(
+        "-u", "--url",
+        action="store",
+        nargs='1',
+        help=("Git url that should be used to generate a meta.yaml. Note: "
+              "entire repo will be cloned a local temp directory.")
     )
     p.add_argument(
         "--skeletor-config",
@@ -88,6 +96,13 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
         "-vv", "--very-verbose",
         help="Enable very verbose output (debug level logging)",
         action='store_true',
+    )
+    p.add_argument(
+        "-r", "--git-rev",
+        help=("check out a specific commit. This argument ia passed to `git "
+              "checkout <arg>`"),
+        action='store',
+        nargs='1'
     )
 
     # TODO
