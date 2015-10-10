@@ -7,36 +7,28 @@
 
 conda-skeletor
 --------------
+`conda-skeletor` takes the pain out of managing conda-recipes for rapidly
+changing repositories. You simply tell it where you source is, how to find
+your tests, what to ignore and a few other minor details. It will then parse
+your python modules for all Python libraries that are imported and generate a
+build script and a meta.yaml from which you can build a conda package!
+
+Motivation
+----------
+Why is this library called `conda-skeletor`?  Well it's better than the
+built-in `conda-skeleton` because `conda-skeletor` will generate a fully
+functional meta.yaml for you, not just a skeleton.  How much better than
+`conda-skeleton` is `conda-skeletor`? ::
+
+    charsum = lambda s: sum([ord(c) for c in s])
+    print(charsum('conda-skeletor') - charsum('conda-skeleton'))
+
+**4**. Yes, that's right. `conda-skeletor` is **4** better than
+`conda-skeleton`. Four times better? No. Just four. Four better.
+
 Manually tweaking conda-recipes make me sad. Much like this:
 
 .. image:: https://pbs.twimg.com/profile_images/448811826873380864/st7dOH-k.jpeg
-
-Who else is sick of hand-curating your conda recipes?  We all know that if you
-have the source code then you, a priori, know **all** imports that your library
-can ever make.  Granted there are edge cases that are required to keep libraries
-compatible with multiple versions of other libraries
-
-- PySide/PyQt4/PyQt5
-- py2/py3
-
-This (at least for now) does not solve **that** particular problem (at least
-automagically).
-
-So, what does ``conda-skeletor`` do?  Executing `conda-skeletor path-to-codebase` will:
-
-#. Parse your (Python!) codebase and find all imports
-#. Split those imports based on if they are:
-
-  - **builtins** (using `stdlib-list <https://github.com/jackmaney/python-stdlib-list>`_)
-  - **relative imports** (just in case you're curious?)
-  - **questionable imports** if they are wrapped in a try/except block (That, I
-    cannot determine how to handle without input from you)
-  - **required imports** if they are at the top level of your module
-  - **optional imports** if they are found inside a function
-
-#. Create a meta.yaml file based on this information (plus a little bit of
-   extra information that you provide via a conda-skeletor.yml file)
-
 
 Usage
 -----
