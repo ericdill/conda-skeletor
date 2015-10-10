@@ -25,7 +25,6 @@ from . import git
 import depfinder
 from . import setup_parser
 import pprint
-from collections import deque
 import yaml
 import logging
 
@@ -50,6 +49,7 @@ package_mapping = {
 }
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
+
 
 def main():
     p = ArgumentParser(
@@ -190,6 +190,7 @@ def get_runtime_deps(iterable_of_deps_tuples, blacklisted_packages=None):
             runtime_deps.add(mod)
     return sorted(list(runtime_deps))
 
+
 def construct_template_info(repo_path, setup_info, user_config=None,
                             setup_deps=None):
     if setup_deps is None:
@@ -197,7 +198,8 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     if user_config is None:
         user_config = {}
     template_info = {}
-    template_info['packagename'] = user_config.get('packagename', setup_info.get('name', ''))
+    template_info['packagename'] = user_config.get('packagename',
+                                                   setup_info.get('name', ''))
     logger.info('setuppy_path = %s' % repo_path)
     version_string = git.git_describe(repo_path, '', '.post')
     import subprocess
@@ -213,14 +215,16 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     if version_string:
         template_info['git'] = True
         # allow the user to overwrite the source url
-        template_info['source_url'] = user_config.get('url', setup_info.get('url', ''))
+        template_info['source_url'] = user_config.get('url',
+                                                      setup_info.get('url',
+                                                                     ''))
 
     # allow the user to overwrite the build number
     template_info['build_number'] = user_config.get('build_number', 0)
     build_requirements = setup_deps.get('required', {})
     # remove blacklisted packages from the build
-    build_requirements = [dep for dep in build_requirements
-                  if dep not in user_config.get('blacklist_packages', [])]
+    build_requirements = [dep for dep in build_requirements if dep not in
+                          user_config.get('blacklist_packages', [])]
     # add the build deps to the template info
     template_info['build_requirements'] = build_requirements
 
@@ -230,16 +234,20 @@ def construct_template_info(repo_path, setup_info, user_config=None,
         build_string = PY_BUILD_STRING
 
     # allow the user to overwrite the build string
-    template_info['build_string'] = user_config.get('build_string', build_string)
+    template_info['build_string'] = user_config.get('build_string',
+                                                    build_string)
     # allow the user to overwrite the home url
-    template_info['home_url'] = user_config.get('home_url', template_info['source_url'])
+    template_info['home_url'] = user_config.get('home_url',
+                                                template_info['source_url'])
     # raise if there is no license in either the setup_info or the user_config
-    template_info['license'] = setup_info.get('license', user_config['license'])
+    template_info['license'] = setup_info.get('license',
+                                              user_config['license'])
     return template_info
+
 
 def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
     logger.info('finding test imports')
-    paths = []
+
     def into_importable(full_module_path, lib_name):
         relative_module_path = full_module_path.split(lib_name)[-1]
         # trim the '.py'
@@ -255,6 +263,7 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
     all_imports = [into_importable(full_path, importable_lib_name)
                    for mod_name, full_path, catcher in iterable_of_deps_tuples]
     return sorted(all_imports)
+
 
 def execute(args, parser):
     """To match the API of conda-build"""
@@ -274,42 +283,48 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     skeletor_config = defaultdict(list)
     with open(skeletor_config_path) as f:
         skeletor_config.update(yaml.load(f.read()))
-    logger.info('\nskeletor-config file\n'
-                  '--------------------')
+    logger.info('\nskeletor-config file'
+                '\n--------------------')
     logger.info('path = %s' % skeletor_config_path)
     logger.info(pprint.pformat(skeletor_config))
 
     # find the dependencies for all modules in the source directory
     repo_deps = list(depfinder.iterate_over_library(source_path))
 
-    logger.info('\nFound %s python files\n'
-                  '---------------------' % len(repo_deps))
+    logger.info('\nFound %s python files'
+                '\n---------------------' % len(repo_deps))
     logger.info('source directory = %s' % source_path)
     paths = [p[1] for p in repo_deps]
     logger.info(pprint.pformat(paths))
 
     # Compile the regexers listed in the conda-skeleton.yml
-    test_regexers = [re.compile(reg) for reg in skeletor_config.get('test_regex', [])]
-    ignore_path_regexers = [re.compile(reg) for reg in skeletor_config.get('ignore_path_regex', [])]
-    include_path_regexers = [re.compile(reg) for reg in skeletor_config.get('include_path_regex', [])]
-    extra_setup_regexers = [re.compile(reg) for reg in skeletor_config.get('extra_setup_files_regex', [])]
-    logger.info('\nRegexers\n'
-          '--------')
+    test_regexers = [re.compile(reg) for reg in
+                     skeletor_config.get('test_regex', [])]
+    ignore_path_regexers = [re.compile(reg) for reg in
+                            skeletor_config.get('ignore_path_regex', [])]
+    include_path_regexers = [re.compile(reg) for reg in
+                             skeletor_config.get('include_path_regex', [])]
+    extra_setup_regexers = [re.compile(reg) for reg in
+                            skeletor_config.get('extra_setup_files_regex', [])]
+    logger.info('\nRegexers'
+                '\n--------')
     logger.info('test_regexers = %s' % test_regexers)
     logger.info('ignore_path_regexers = %s' % ignore_path_regexers)
     logger.info('include_path_regexers = %s' % include_path_regexers)
     logger.info('extra_setup_regexers = %s' % extra_setup_regexers)
 
     ignored, without_ignored = split_deps(repo_deps, ignore_path_regexers)
-    setup_files, non_setup_files = split_deps(without_ignored, extra_setup_regexers)
+    setup_files, non_setup_files = split_deps(without_ignored,
+                                              extra_setup_regexers)
     if include_path_regexers:
-        included, without_included = split_deps(non_setup_files, include_path_regexers)
+        included, without_included = split_deps(non_setup_files,
+                                                include_path_regexers)
     else:
         included = non_setup_files
         without_included = None
     tests, without_tests = split_deps(included, test_regexers)
-    logger.info('\nSplitting up the modules\n'
-            '------------------------')
+    logger.info('\nSplitting up the modules'
+                '\n------------------------')
     logger.info('Ignored modules')
     ignored_paths = [p[1] for p in ignored]
     logger.info(pprint.pformat(ignored_paths))
@@ -343,7 +358,7 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         str
             The name of the library (hopefully!)
         """
-        non_test_paths = [full_path for mod_name, full_path, catcher in without_tests]
+        non_test_paths = [path for name, path, catcher in without_tests]
         common_path = os.path.commonprefix(non_test_paths)
         return common_path.strip(os.sep).split(os.sep)[-1]
 
@@ -354,8 +369,8 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         without_tests,
         blacklisted_packages=skeletor_config.get('blacklist_packages')
     )
-    logger.info('\nExtracted dependencies\n'
-            '----------------------')
+    logger.info('\nExtracted dependencies'
+                '\n----------------------')
     logger.info('Runtime')
     logger.info(pprint.pformat(runtime_deps))
 
@@ -379,12 +394,12 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     if setup_info:
         # try:
         setup_info_dict = setup_parser.parse(setup_info[1])
-        logger.info("\nInformation scraped from setup.py\n"
-                "---------------------------------")
+        logger.info("\nInformation scraped from setup.py"
+                    "\n---------------------------------")
         logger.info(pprint.pformat(setup_info_dict))
         # except IndexError:
-        #     # Occurs when setup.py has a call like setup(**kwargs). Looking at
-        #     # you pims...
+        #     # Occurs when setup.py has a call like setup(**kwargs). Looking
+        #     # at you pims...
         #     logger.info("No information gained from setup.py")
         #     setup_info_dict = {}
     else:
@@ -409,8 +424,8 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     # conda recipe
     for dep in install_requires:
         setup_deps['required'].add(dep)
-    logger.info('\nSetup dependencies\n'
-            '------------------')
+    logger.info('\nSetup dependencies'
+                '\n------------------')
     logger.info(pprint.pformat(setup_deps))
     # create the git repo path so that I can determine the version string from
     # the source code
@@ -444,23 +459,24 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         template_info['test_imports'] = find_test_imports(importable_lib_name,
                                                           without_tests)
 
-    logger.info('\nTemplate Information\n'
-            '--------------------')
+    logger.info('\nTemplate Information'
+                '\n--------------------')
     logger.info(pprint.pformat(template_info))
     # load and render the template
     template_dir = os.path.join(conda_skeletor_content, 'templates')
-    logger.info('\nTemplate directory\n'
-            '------------------\n'
-            '%s' % (template_dir))
+    logger.info('\nTemplate directory'
+                '\n------------------'
+                '\n%s' % (template_dir))
     # create the jinja environment
     jinja_env = Environment(loader=FileSystemLoader(template_dir))
 
     if skeletor_config.get('generate_test_suite', 'False'):
         if 'nose' in test_requires:
-            template_info['test_commands'] = ['nosetests -v %s' % importable_lib_name]
+            template_info['test_commands'] = ['nosetests -v %s' %
+                                              importable_lib_name]
         elif 'pytest' in test_requires:
-            template_info['test_commands'] = ['py.test -v %s' % importable_lib_name]
-
+            template_info['test_commands'] = ['py.test -v %s' %
+                                              importable_lib_name]
 
     template = jinja_env.get_template('meta.tmpl')
     # template.render(**setup_info)
@@ -480,9 +496,9 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
 
     logger.info('\nOUTPUT FILES'
                 '\n------------')
-    for name, fname, contents in zip(
-        ['build.sh', 'meta.yaml'], [build_bash_fname, meta_fname],
-        [DEFAULT_BUILD_BASH, meta_yml]):
+    for name, fname, contents in zip(['build.sh', 'meta.yaml'],
+                                     [build_bash_fname, meta_fname],
+                                     [DEFAULT_BUILD_BASH, meta_yml]):
         logger.info('\n%s written to: %s' % (name, fname))
         logger.info('\n%s file contents below\n' % name)
         logger.info(contents)
