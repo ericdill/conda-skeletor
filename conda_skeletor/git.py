@@ -70,8 +70,8 @@ def git_describe(git_root, version_prefix, version_suffix,
     logger.debug('split_desc = %s', split_desc)
 
     dirty = ''
-    # man this is going to be a terrible bug when the first six characters of
-    # the git hash contain `dirty`
+    # this is going to be a terrible bug when the first six characters of the
+    # git hash contain `dirty`
     if 'dirty' in split_desc[-1]:
         dirty = split_desc.pop(-1)
 
