@@ -25,7 +25,6 @@ def clone_to_temp(git_url, git_rev=None):
         git_rev = 'master'
     tempdir = tempfile.gettempdir()
     sourcedir = os.path.join(tempdir, git_url.strip('/').split('/')[-1])
-
     # clone the git repo to the target directory
     subprocess.call(['git', 'clone', git_url, sourcedir])
     if git_rev is not None:
