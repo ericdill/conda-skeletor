@@ -5,27 +5,31 @@ import os
 logger = logging.getLogger(__name__)
 
 
-def clone_to_temp(git_url, git_rev):
+def clone_to_temp(git_url, git_rev=None):
     """Clone a `git_url` to temp dir and check out `git_rev`
 
     Parameters
     ----------
     git_url : str
         Git repo to clone
-    git_rev : str
+    git_rev : str, optional
         Branch to check out
+        Defaults to whatever the repo thinks is the master branch
 
     Returns
     -------
     path : str
         Full path to root of newly cloned git repo
     """
+    if git_rev is None:
+        git_rev = 'master'
     tempdir = tempfile.gettempdir()
     sourcedir = os.path.join(tempdir, git_url.strip('/').split('/')[-1])
 
     # clone the git repo to the target directory
     subprocess.call(['git', 'clone', git_url, sourcedir])
-    subprocess.call(['git', 'checkout', git_rev], cwd=sourcedir)
+    if git_rev is not None:
+        subprocess.call(['git', 'checkout', git_rev], cwd=sourcedir)
 
     return sourcedir
 
