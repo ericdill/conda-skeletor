@@ -289,6 +289,19 @@ def execute(args, parser):
 
 
 def execute_programmatically(skeletor_config_path, source_path, output_dir):
+    """Execute conda skeletor
+
+    Parameters
+    ----------
+    skeletor_config_path : str
+        Path to the skeletor config yaml. Typically named 'conda-skeletor.yml'
+    source_path : str
+        Path to the source code for which a full conda recipe is to be
+        generated.
+    output_dir : str
+        Directory in which the generated conda recipe is to be placed. Will be
+        made if it does not already exist
+    """
 
     # make sure the skeletor_config_path is an absolute path
     skeletor_config_path = os.path.expanduser(skeletor_config_path)
