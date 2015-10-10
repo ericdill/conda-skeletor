@@ -372,8 +372,8 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         if('setup.py' in full_path):
             setup_info = (mod_name, full_path, mod_deps)
 
-    logger.info('\nSetup.py path info\n'
-                   '-----------------')
+    logger.info('\nSetup.py path info'
+                '\n-----------------')
     logger.info('setup path = %s' % full_path)
     logger.info('setup info = {}'.format(setup_info))
     if setup_info:
@@ -486,5 +486,3 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         logger.info('\n%s written to: %s' % (name, fname))
         logger.info('\n%s file contents below\n' % name)
         logger.info(contents)
-
-
