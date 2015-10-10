@@ -73,7 +73,7 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
               "meta.yaml",)
     )
     p.add_argument(
-        "-u", "--url",
+        "-gu", "--git-url",
         action="store",
         nargs='1',
         help=("Git url that should be used to generate a meta.yaml. Note: "
@@ -98,7 +98,7 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
         action='store_true',
     )
     p.add_argument(
-        "-r", "--git-rev",
+        "-gr", "--git-rev",
         help=("check out a specific commit. This argument ia passed to `git "
               "checkout <arg>`"),
         action='store',
@@ -269,6 +269,20 @@ def execute(args, parser):
     """To match the API of conda-build"""
     logger.info('\nInput arguments'
                 '\n---------------')
+    path = getattr(args, 'path', None)
+    git_url = getattr(args, 'git_url', None)
+    if path is None and git_url is None:
+        raise ValueError("You need to provide me with a --path to source code "
+                         "or a --git-url to a git repository")
+    if path is not None and git_url is not None:
+        raise ValueError("--path and --git-url are either/or command-line "
+                         "arguments. I do not know what to do if you give me "
+                         "both")
+    git_rev = getattr(args, 'git_rev', None)
+
+    if git_url is not None:
+        tempdir = 
+
     logger.info(pprint.pformat(vars(args)))
     execute_programmatically(args.skeletor_config, args.source,
                              args.output_dir)
