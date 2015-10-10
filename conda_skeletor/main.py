@@ -281,10 +281,10 @@ def execute(args, parser):
     git_rev = getattr(args, 'git_rev', None)
 
     if git_url is not None:
-        source_dir = git.clone_to_temp(git_url, git_rev)
+        path = git.clone_to_temp(git_url, git_rev)
 
     logger.info(pprint.pformat(vars(args)))
-    execute_programmatically(args.skeletor_config, args.source,
+    execute_programmatically(args.skeletor_config, path,
                              args.output_dir)
 
 
