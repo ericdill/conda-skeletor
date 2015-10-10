@@ -16,7 +16,7 @@ setup(
     package_data={'conda_skeletor.templates': ['*']},
     include_package_data=True,
 
-    install_requires=['setuptools'],
+    install_requires=['setuptools', 'pyyaml', 'jinja2', 'depfinder'],
 
     entry_points={
         'console_scripts': [
