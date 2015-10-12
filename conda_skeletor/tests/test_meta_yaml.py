@@ -11,11 +11,15 @@ import conda_skeletor
 from conda_skeletor.git import clone_to_temp
 
 
-data_path = path.join(path.dirname(__file__), 'data')
-projects_to_test = [path.join(data_path, folder) for folder in os.listdir(data_path)]
+def test_meta_generation():
+    data_path = path.join(path.dirname(__file__), 'data')
+    projects_to_test = [path.join(data_path, folder)
+                        for folder in os.listdir(data_path)]
+    for project_path in projects_to_test:
+        yield meta_generator_helper, project_path
 
-@pytest.mark.parametrize("data_path", projects_to_test)
-def test_meta_generation(data_path):
+
+def meta_generator_helper(data_path):
     # set up
     target_as_dict = safe_yaml_read(path.join(data_path, 'target.meta.yaml'))
     with open(path.join(data_path, 'target.meta.yaml'), 'r') as f:
