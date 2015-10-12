@@ -23,15 +23,15 @@ before_install:
 
 install:
   - export GIT_FULL_HASH=`git rev-parse HEAD`
-  - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION jinja2 pyyaml pytest coverage
+  - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION jinja2 pyyaml pytest coverage nose
   - source activate testenv
   - pip install codecov coveralls pytest-xdist pytest-cov
   - pip install https://github.com/ericdill/depfinder/zipball/master#egg=depfinder
   - python setup.py install
 
 script:
-  - py.test conda_skeletor --cov conda_skeletor -svv
-  # - nosetests --with-cover --cover-package conda_skeletor
+  # - py.test conda_skeletor --cov conda_skeletor -svv
+  - nosetests --with-cover --cover-package conda_skeletor
 
 after_success:
   - codecov
