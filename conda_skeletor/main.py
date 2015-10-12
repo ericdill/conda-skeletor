@@ -52,7 +52,8 @@ package_mapping = {
 }
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
-
+TEMPLATE_DIR = os.path.join(conda_skeletor_content, 'templates')
+del conda_skeletor_content
 
 def main():
     p = ArgumentParser(
@@ -496,12 +497,11 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
                 '\n--------------------')
     logger.info(pprint.pformat(template_info))
     # load and render the template
-    template_dir = os.path.join(conda_skeletor_content, 'templates')
     logger.info('\nTemplate directory'
                 '\n------------------'
-                '\n%s' % (template_dir))
+                '\n%s' % (TEMPLATE_DIR))
     # create the jinja environment
-    jinja_env = Environment(loader=FileSystemLoader(template_dir))
+    jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
     if skeletor_config.get('generate_test_suite', 'False'):
         if 'nose' in test_requires:
