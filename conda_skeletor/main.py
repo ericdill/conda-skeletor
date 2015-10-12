@@ -34,7 +34,8 @@ DEFAULT_BUILD_BASH = """#!/bin/bash
 $PYTHON setup.py build
 $PYTHON setup.py install"""
 
-NPY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}py{{ py }}"
+NPY_BUILD_STRING = ("{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}"
+                    "py{{ py }}")
 PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
 package_mapping = {
