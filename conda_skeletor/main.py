@@ -38,6 +38,8 @@ NPY_BUILD_STRING = ("{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}"
                     "py{{ py }}")
 PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
+# keys are the package name (that you import)
+# values are the names that you would find on conda/pypi
 package_mapping = {
     'skimage': 'scikit-image',
     'netCDF4': 'netcdf4',
