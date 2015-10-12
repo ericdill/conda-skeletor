@@ -40,7 +40,7 @@ PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
 # keys are the package name (that you import)
 # values are the names that you would find on conda/pypi
-package_mapping = {
+_PACKAGE_MAPPING = {
     'skimage': 'scikit-image',
     'netCDF4': 'netcdf4',
     'PIL': 'pillow',
@@ -478,7 +478,7 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         pass
 
     # remap deps
-    for k, v in package_mapping.items():
+    for k, v in _PACKAGE_MAPPING.items():
         if k in runtime_deps:
             runtime_deps.remove(k)
             runtime_deps.append(v)
