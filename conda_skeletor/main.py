@@ -253,7 +253,9 @@ def construct_template_info(repo_path, setup_info, user_config=None,
 
 
 def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
-    logger.info('finding test imports')
+    logger.info('Entering find_test_imports')
+    logger.info('importable_lib_name = %s', importable_lib_name)
+    logger.info('iterable_of_deps_tuples = %s', iterable_of_deps_tuples)
 
     def into_importable(full_module_path, lib_name):
         relative_module_path = full_module_path.split(lib_name)[-1]
@@ -269,6 +271,8 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
         return importable_path
     all_imports = [into_importable(full_path, importable_lib_name)
                    for mod_name, full_path, catcher in iterable_of_deps_tuples]
+    all_imports = sorted(all_imports)
+    logger.info('Returning all_imports = %s', all_imports)
     return sorted(all_imports)
 
 
@@ -392,9 +396,17 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         str
             The name of the library (hopefully!)
         """
+        logger.info("Entering find_lib_name")
         non_test_paths = [path for name, path, catcher in without_tests]
         common_path = os.path.commonprefix(non_test_paths)
-        return common_path.strip(os.sep).split(os.sep)[-1]
+        logger.info('common_path = %s', common_path)
+        lib_name = common_path.strip(os.sep).split(os.sep)[-1]
+        if lib_name.endswith('.py'):
+            logger.info("Found that lib_name ends with '.py'. This must be a"
+                        "single-module package. Stripping the .py")
+            lib_name = lib_name[:-3]
+        logger.info("Leaving find_lib_name and returning %s", lib_name)
+        return lib_name
 
     importable_lib_name = find_lib_name(without_tests)
     skeletor_config['blacklist_packages'].append(importable_lib_name)
