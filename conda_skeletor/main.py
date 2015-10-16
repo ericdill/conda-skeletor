@@ -532,19 +532,17 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     except FileExistsError:
         # the file, uh, already exists
         pass
+    template = jinja_env.get_template('meta.tmpl')
     meta_yml = template.render(**template_info)
+
     with open(meta_fname, 'w') as f:
         f.write(meta_yml)
+    if skeletor_config['generate_build_script']:
+        build_bash_fname = os.path.join(output_dir, 'build.sh')
+        with open(build_bash_fname, 'w') as f:
+            f.write(DEFAULT_BUILD_BASH)
 
-    build_bash_fname = os.path.join(output_dir, 'build.sh')
-    with open(build_bash_fname, 'w') as f:
-        f.write(DEFAULT_BUILD_BASH)
-
-    logger.info('\nOUTPUT FILES'
-                '\n------------')
-    for name, fname, contents in zip(['build.sh', 'meta.yaml'],
-                                     [build_bash_fname, meta_fname],
-                                     [DEFAULT_BUILD_BASH, meta_yml]):
-        logger.info('\n%s written to: %s' % (name, fname))
-        logger.info('\n%s file contents below\n' % name)
-        logger.info(contents)
+    logger.info('\nmeta.yaml'
+                '\n---------')
+    logger.info('\nwritten to: %s' % meta_fname)
+    logger.info(meta_yml)
