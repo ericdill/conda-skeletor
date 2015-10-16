@@ -525,16 +525,6 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
                 '\n%s' % (TEMPLATE_DIR))
     # create the jinja environment
     jinja_env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
-
-    if skeletor_config.get('generate_test_suite', 'False'):
-        if 'nose' in test_requires:
-            template_info['test_commands'] = ['nosetests -v %s' %
-                                              importable_lib_name]
-        elif 'pytest' in test_requires:
-            template_info['test_commands'] = ['py.test -v %s' %
-                                              importable_lib_name]
-
-    template = jinja_env.get_template('meta.tmpl')
     # template.render(**setup_info)
     meta_fname = os.path.join(output_dir, 'meta.yaml')
     try:
