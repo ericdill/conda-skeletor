@@ -498,8 +498,18 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         if k in test_requires:
             test_requires.remove(k)
             test_requires.append(v)
+    extra_requirements = skeletor_config.get('requirements', {})
+    extra_test = extra_requirements.get('test', {})
+    for lib in extra_test:
+        test_requires.append(lib)
+    extra_run = extra_requirements.get('run', {})
+    for lib in extra_run:
+        run_requires.append(lib)
 
-    template_info['run_requirements'] = runtime_deps
+    test_requires = sorted(test_requires)
+    run_requires = sorted(run_requires)
+
+    template_info['run_requirements'] = run_requires
     template_info['test_requires'] = test_requires
 
     if 'test_imports' not in template_info:
