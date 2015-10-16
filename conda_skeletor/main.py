@@ -168,7 +168,7 @@ def split_deps(iterable_of_deps_tuples, iterable_of_regexers):
     return good, bad
 
 
-def get_runtime_deps(iterable_of_deps_tuples, blacklisted_packages=None):
+def get_run_requires(iterable_of_deps_tuples, blacklisted_packages=None):
     """Find the runtime dependencies
 
     Parameters
@@ -186,13 +186,13 @@ def get_runtime_deps(iterable_of_deps_tuples, blacklisted_packages=None):
     """
     if blacklisted_packages is None:
         blacklisted_packages = []
-    runtime_deps = set()
+    run_requires = set()
     for mod_name, path_to_module, catcher in iterable_of_deps_tuples:
         for mod in catcher.required_modules.union(catcher.sketchy_modules):
             if mod in blacklisted_packages:
                 continue
-            runtime_deps.add(mod)
-    return sorted(list(runtime_deps))
+            run_requires.add(mod)
+    return sorted(list(run_requires))
 
 
 def construct_template_info(repo_path, setup_info, user_config=None,
@@ -411,17 +411,17 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     importable_lib_name = find_lib_name(without_tests)
     skeletor_config['blacklist_packages'].append(importable_lib_name)
     # find the runtime deps
-    runtime_deps = get_runtime_deps(
+    run_requires = get_run_requires(
         without_tests,
         blacklisted_packages=skeletor_config.get('blacklist_packages')
     )
     logger.info('\nExtracted dependencies'
                 '\n----------------------')
     logger.info('Runtime')
-    logger.info(pprint.pformat(runtime_deps))
+    logger.info(pprint.pformat(run_requires))
 
     # find the testing time deps
-    test_requires = get_runtime_deps(
+    test_requires = get_run_requires(
         tests,
         blacklisted_packages=skeletor_config.get('blacklist_packages')
     )
@@ -481,7 +481,7 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
                                             user_config=skeletor_config)
     # remove self-references
     try:
-        runtime_deps.remove(template_info['packagename'])
+        run_requires.remove(template_info['packagename'])
     except ValueError:
         pass
     try:
@@ -491,9 +491,9 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
 
     # remap deps
     for k, v in _PACKAGE_MAPPING.items():
-        if k in runtime_deps:
-            runtime_deps.remove(k)
-            runtime_deps.append(v)
+        if k in run_requires:
+            run_requires.remove(k)
+            run_requires.append(v)
         if k in test_requires:
             test_requires.remove(k)
             test_requires.append(v)
