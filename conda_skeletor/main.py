@@ -30,6 +30,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+try:
+    # python 3+
+    FileExistsError:
+except NameError:
+    # python 2.7
+    FileExistsError = OSError
+
 DEFAULT_BUILD_BASH = """#!/bin/bash
 $PYTHON setup.py build
 $PYTHON setup.py install"""
