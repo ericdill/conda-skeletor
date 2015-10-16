@@ -513,8 +513,8 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     for lib in extra_run:
         run_requires.append(lib)
 
-    test_requires = sorted(test_requires)
     run_requires = sorted(run_requires)
+    test_requires = sorted(test_requires + run_requires)
 
     template_info['run_requirements'] = run_requires
     template_info['test_requires'] = test_requires
