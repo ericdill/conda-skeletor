@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 try:
     # python 3+
-    FileExistsError:
+    FileExistsError
 except NameError:
     # python 2.7
     FileExistsError = OSError
