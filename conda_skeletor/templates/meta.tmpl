@@ -7,12 +7,13 @@ package:
 source:
   git_url: {{ source_url }}
   git_rev: {{ source_rev }}
-
+{% if patches %}  patches:{% for patch in patches %}
+    - {{ patch }}{% endfor %}{% endif %}
 build:
   number: {{ build_number }}
-{% if build_string %}
-  string: {{ build_string }}
-{% endif %}
+
+{% if build_string %}  string: {{ build_string }}{% endif %}
+
   # TODO add entry points
 
 requirements:
@@ -26,9 +27,6 @@ requirements:
 test:
   {% if test_requires %}requires:{% for test_require in test_requires | sort %}
     - {{ test_require }}{% endfor %}
-{% endif %}
-  {% if test_commands %}commands:{% for test_command in test_commands | sort %}
-    - {{ test_command }}{% endfor %}
 {% endif %}
   {% if test_imports %}imports:{% for test_import in test_imports | sort %}
     - {{ test_import }}{% endfor %}
