@@ -218,7 +218,8 @@ def construct_template_info(repo_path, setup_info, user_config=None,
         template_info['source_rev'] = version_string
 
     template_info['packageversion'] = version_string
-
+    if 'patches' in user_config:
+        template_info['patches'] = user_config['patches']
     if version_string:
         template_info['git'] = True
         # allow the user to overwrite the source url
