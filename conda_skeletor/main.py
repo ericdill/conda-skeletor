@@ -136,10 +136,7 @@ def _regex_tester(test_string, regexers):
     """Helper function to test a string against an iterable of regexers"""
     matched = False
     for regex in regexers:
-        if regex.__class__.__name__ == 'SRE_Pattern':
-            matched = regex.match(test_string) is not None
-        else:
-            matched = regex in test_string
+        matched = (re.compile(regex).match(test_string) is not None) or (regex in test_string)
         if matched:
             break
     return matched
@@ -342,16 +339,13 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     logger.info(pprint.pformat(paths))
 
     # Compile the regexers listed in the conda-skeleton.yml
-    test_regexers = [re.compile(reg) for reg in
-                     skeletor_config.get('test_regex', [])]
-    ignore_path_regexers = [re.compile(reg) for reg in
-                            skeletor_config.get('ignore_path_regex', [])]
-    include_path_regexers = [re.compile(reg) for reg in
-                             skeletor_config.get('include_path_regex', [])]
-    extra_setup_regexers = [re.compile(reg) for reg in
-                            skeletor_config.get('extra_setup_files_regex', [])]
-    logger.info('\nRegexers'
-                '\n--------')
+    test_regexers = skeletor_config.get('test_regex', [])
+    ignore_path_regexers = skeletor_config.get('ignore_path_regex', [])
+    include_path_regexers = skeletor_config.get('include_path_regex', [])
+    extra_setup_regexers = skeletor_config.get('extra_setup_files_regex', [])
+
+    logger.info('\nComparison strings'
+                '\n------------------')
     logger.info('test_regexers = %s' % test_regexers)
     logger.info('ignore_path_regexers = %s' % ignore_path_regexers)
     logger.info('include_path_regexers = %s' % include_path_regexers)
