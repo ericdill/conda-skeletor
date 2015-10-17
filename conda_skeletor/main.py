@@ -49,6 +49,7 @@ conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(conda_skeletor_content, 'templates')
 del conda_skeletor_content
 
+
 def main():
     p = ArgumentParser(
         description="""
@@ -145,6 +146,15 @@ def _regex_tester(test_string, regexers):
 
 
 def split_deps(iterable_of_deps_tuples, iterable_of_regexers):
+    """Split modules if they match the regex
+
+    Parameters
+    ----------
+    iterable_of_deps_tuples : iterable
+        Output from depfinder.iterate_over_library
+    iterable_of_regexers : iterable
+        Iterable of regexers to
+    """
     good = []
     bad = []
     for mod, mod_path, catcher in iterable_of_deps_tuples:
@@ -168,15 +178,15 @@ def get_run_requires(iterable_of_deps_tuples, blacklisted_packages=None):
     Parameters
     ----------
     iterable_of_deps_tuples : Iterable
-    Should be an iterable where each element is a tuple/list with
-    (module_name, full_module_path, depfinder.ImportCatcher)
+        Should be an iterable where each element is a tuple/list with
+        (module_name, full_module_path, depfinder.ImportCatcher)
     user_config : dict
-    Dictionary read in from conda-skeletor.yml
+        Dictionary read in from conda-skeletor.yml
 
     Returns
     -------
     list
-    List of runtime dependencies
+        List of runtime dependencies
     """
     if blacklisted_packages is None:
         blacklisted_packages = []
@@ -264,6 +274,7 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
             importable_path = importable_path[:-9]
         # turn the string from path/to/module to path.to.module
         return importable_path
+
     all_imports = [into_importable(full_path, importable_lib_name)
                    for mod_name, full_path, catcher in iterable_of_deps_tuples]
     all_imports = sorted(all_imports)
