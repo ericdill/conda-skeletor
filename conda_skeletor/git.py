@@ -5,7 +5,7 @@ import os
 logger = logging.getLogger(__name__)
 
 
-def clone_to_temp(git_url, git_rev=None):
+def clone(git_url, git_rev=None):
     """Clone a `git_url` to temp dir and check out `git_rev`
 
     Parameters
@@ -29,13 +29,13 @@ def clone_to_temp(git_url, git_rev=None):
         # clone the git repo to the target directory
         logger.debug('Cloning to %s', sourcedir)
         subprocess.call(['git', 'clone', git_url, sourcedir])
-    if git_rev is not None:
-        subprocess.call(['git', 'checkout', git_rev], cwd=sourcedir)
-
     return sourcedir
 
+def checkout(git_rev, path_to_source):
+    subprocess.call(['git', 'checkout', git_rev], cwd=path_to_source)
 
-def git_describe(git_root, version_prefix, version_suffix,
+
+def describe(git_root, version_prefix, version_suffix,
                  use_local_version_id=False):
     """Use git describe to get the version, then format it to PEP440
 
