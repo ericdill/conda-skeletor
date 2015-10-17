@@ -488,15 +488,18 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         test_requires.remove(template_info['packagename'])
     except ValueError:
         pass
+    build_requirements = template_info['build_requirements']
 
     # remap deps
     for k, v in _PACKAGE_MAPPING.items():
         if k in run_requires:
-            run_requires.remove(k)
-            run_requires.append(v)
+            run_requires[run_requires.index(k)] = v
         if k in test_requires:
-            test_requires.remove(k)
-            test_requires.append(v)
+            test_requires[test_requires.index(k)] = v
+        if k in build_requirements:
+            build_requirements[build_requirements.index(k)] = v
+
+    template_info['build_requirements'] = build_requirements
     extra_requirements = skeletor_config.get('requirements', {})
     extra_test = extra_requirements.get('test', {})
     for lib in extra_test:
