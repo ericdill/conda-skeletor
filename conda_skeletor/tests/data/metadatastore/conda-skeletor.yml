@@ -18,4 +18,12 @@ blacklist_packages:
   # shipped with pymongo
   - bson
 
-generate_test_suite: True
+patches:
+  - config.patch
+
+requirements:
+  test:
+    - coverage
+    - pymongo <3
+  run:
+    - pymongo <3

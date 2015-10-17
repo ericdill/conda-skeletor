@@ -2,12 +2,11 @@
 
 package:
   name: scikit-xray
-  version: v0.0.5.post15
+  version: v0.0.5
 
 source:
   git_url: http://github.com/scikit-xray/scikit-xray
-  git_rev: 7d6d0b5919d48df4b9f733c3112b344135eab701
-
+  git_rev: v0.0.5
 
 build:
   number: 0
@@ -33,18 +32,17 @@ requirements:
 
 test:
   requires:
+    - lmfit
+    - netcdf4
     - nose
     - numpy
     - scikit-image
     - scipy
     - six
-
-  commands:
-    - nosetests -v skxray
+    - xraylib
 
   imports:
     - skxray
-    - skxray._version
     - skxray.core
     - skxray.core.arithmetic
     - skxray.core.calibration

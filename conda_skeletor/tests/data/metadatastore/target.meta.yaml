@@ -2,13 +2,13 @@
 
 package:
   name: metadatastore
-  version: v0.2.0.post30
+  version: v0.2.0
 
 source:
   git_url: https://github.com/NSLS-II/metadatastore
-  git_rev: 2bf2796f03e438e0861755b73923da325f9a924b
-
-
+  git_rev: v0.2.0
+  patches:
+    - config.patch
 build:
   number: 0
 
@@ -23,18 +23,22 @@ requirements:
     - python
     - boltons
     - mongoengine
+    - pymongo <3
     - pytz
     - pyyaml
     - six
 
 test:
   requires:
+    - boltons
+    - coverage
+    - mongoengine
     - nose
     - numpy
+    - pymongo <3
     - pytz
-
-  commands:
-    - nosetests -v metadatastore
+    - pyyaml
+    - six
 
   imports:
     - metadatastore

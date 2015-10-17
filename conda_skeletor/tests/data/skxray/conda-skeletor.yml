@@ -1,7 +1,7 @@
 ignore_path_regex:
   - .*(doc).*
   - .*(examples).*
-  - .*(versioneer).*
+  - .*(version).*
 
 extra_setup_files_regex:
   - .*(/scikit-xray/setup).*

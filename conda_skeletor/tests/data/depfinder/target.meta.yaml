@@ -2,12 +2,11 @@
 
 package:
   name: depfinder
-  version: v1.0.0.post6
+  version: v1.0.0
 
 source:
   git_url: http://github.com/ericdill/depfinder
-  git_rev: a8f3529b5a59e7ecac4e293f5d441622cf8bd6a3
-
+  git_rev: v1.0.0
 
 build:
   number: 0
@@ -37,7 +36,7 @@ test:
 
 about:
   home: http://github.com/ericdill/depfinder
-  license: GPLv3
+  license: []
 
 
 # See

@@ -8,7 +8,7 @@ import shutil
 import re
 
 import conda_skeletor
-from conda_skeletor.git import clone_to_temp
+from conda_skeletor import git
 
 
 def test_meta_generation():
@@ -31,7 +31,8 @@ def meta_generator_helper(data_path):
     git_rev = target_as_dict['source']['git_rev']
 
     # clone the repo to a temporary directory
-    source_dir = clone_to_temp(git_url, git_rev)
+    source_dir = git.clone(git_url, git_rev)
+    git.checkout(git_rev, source_dir)
 
     # run tests
     programmatic_path = generate_programmatically(source_dir,
