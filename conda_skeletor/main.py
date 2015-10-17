@@ -206,8 +206,8 @@ def construct_template_info(repo_path, setup_info, user_config=None,
     template_info['packagename'] = user_config.get('packagename',
                                                    setup_info.get('name', ''))
     logger.info('setuppy_path = %s' % repo_path)
-    version_string = git.git_describe(repo_path, '', '.post')
-    import subprocess
+    version_string = git.describe(repo_path, '', '.post')
+
     if '.post' in version_string:
         full_hash = subprocess.check_output(['git', "rev-parse", "HEAD"],
                                             cwd=repo_path).decode()
