@@ -281,22 +281,55 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
 
 def execute(args, parser):
     """To match the API of conda-build"""
-    logger.info('\nInput arguments'
-                '\n---------------')
     path = getattr(args, 'path', None)
     git_url = getattr(args, 'git_url', None)
+    git_rev = getattr(args, 'git_rev', None)
+
     if path is None and git_url is None:
         raise ValueError("You need to provide me with a --path to source code "
                          "or a --git-url to a git repository")
     if path is not None and git_url is not None:
-        raise ValueError("--path and --git-url are either/or command-line "
-                         "arguments. I do not know what to do if you give me "
-                         "both")
-    git_rev = getattr(args, 'git_rev', None)
+        raise ValueError("Please only give me one of --path or --git-url. You "
+                         "gave me both. I do not know what do with both.")
 
-    if git_url is not None:
-        path = git.clone_to_temp(git_url, git_rev)
+    if path:
+        # the user has requested that we look at some local source code.
+        # If they are also asking for a specific git tag, we should copy the
+        # source directory to a temporary location and then clean the source
+        # dir and check out the tag that they asked for
+        # an alternative option would be to
+        # subprocess.call(['git', 'stash'], cwd=path)
+        # old_git_tag = subprocess.check_output(['git', 'describe'], cwd=path)
+        # subprocess.call(['git', 'checkout', git_rev], cwd=path)
+        # run conda skeletor
+        # subprocess.call(['git', 'checkout', old_git_tag], cwd=path)
+        # subprocess.call(['git', 'stash', 'pop'], cwd=path)
+        libname = [s for s in path.split(os.sep) if s][-1]
+        logger.info('path = %s' % path)
+        logger.info('libname = %s' % libname)
+        tempdir = os.path.join(tempfile.gettempdir(), libname)
+        logger.info("Copying %s to %s" % (path, tempdir))
+        try:
+            shutil.copytree(path, tempdir)
+        except FileExistsError:
+            # This repo has already been copied to a temporary location
+            logger.info("Repo already exists at %s. Cleaning with `git clean "
+                        "-xfd`" % tempdir)
+            subprocess.Popen(['git', 'clean', '-xfd'], cwd=tempdir)
+            pass
+        path = tempdir
 
+    if git_url:
+        path = git.clone(git_url)
+
+
+    if git_rev:
+        logger.info('Checking out %s' % git_rev)
+        git.checkout(git_rev, path)
+
+    logger.info('\nInput arguments'
+                '\n---------------')
+    logger.info('args from ArgumentParser')
     logger.info(pprint.pformat(vars(args)))
     execute_programmatically(args.skeletor_config, path,
                              args.output_dir)
