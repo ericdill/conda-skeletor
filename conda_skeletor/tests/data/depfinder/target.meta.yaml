@@ -20,7 +20,7 @@ requirements:
   build:
     - python
     - setuptools
-    - stdlib_list
+    - stdlib-list
   run:
     - python
     - stdlib-list
@@ -29,13 +29,11 @@ test:
   requires:
     - nbformat
     - pytest
+    - stdlib-list
     - test_with_code
 
-  commands:
-    - py.test -v depfinder.py
-
   imports:
-    - depfinder.py
+    - depfinder
 
 about:
   home: http://github.com/ericdill/depfinder
