@@ -461,15 +461,15 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     logger.info('Test')
     logger.info(pprint.pformat(test_requires))
 
+    logger.info('\nSetup info'
+                '\n----------')
     setup_info = None
     for mod_name, full_path, mod_deps in setup_files:
         if('setup.py' in full_path):
             setup_info = (mod_name, full_path, mod_deps)
+        logger.info('setup path = %s' % full_path)
+        logger.info('setup info = {}'.format(setup_info))
 
-    logger.info('\nSetup.py path info'
-                '\n-----------------')
-    logger.info('setup path = %s' % full_path)
-    logger.info('setup info = {}'.format(setup_info))
     if setup_info:
         # try:
         setup_info_dict = setup_parser.parse(setup_info[1])
@@ -483,7 +483,6 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         #     setup_info_dict = {}
     else:
         logger.info("No setup.py file found. Is this a python project?")
-        raise
 
     # grab the code out of the setup.py file to find its deps so that I can
     # parse the code for imports
