@@ -54,9 +54,10 @@ del conda_skeletor_content
 def main():
     p = ArgumentParser(
         description="""
-Tool for generating conda recipes from source code. These should need to be
-only lightly edited, if at all. Many recipes should not even need to be edited.
-        """,
+Tool for generating conda recipes from source code. The resultant recipe should
+need to be only lightly edited, if at all. Many recipes should not even need
+to be edited.
+""",
     )
     p.add_argument(
         "-o", "--output-dir",
@@ -70,12 +71,14 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
         action="store",
         nargs='?',
         help=("Directory of source code from which I should generate a "
-              "meta.yaml"),
+              "meta.yaml. Note: Exclusive with --git-url."),
     )
     p.add_argument(
         "-gr", "--git-rev",
         help=("check out a specific commit. This argument ia passed to `git "
-              "checkout <arg>`"),
+              "checkout <arg>`. Note: the repo will be copied to a temp "
+              "directory first, then `git clean -xfd`, then `git reset --hard`,"
+              "then `git checkout git-rev`"),
         action='store',
         nargs='?'
     )
@@ -84,7 +87,8 @@ only lightly edited, if at all. Many recipes should not even need to be edited.
         action="store",
         nargs='?',
         help=("Git url that should be used to generate a meta.yaml. Note: "
-              "entire repo will be cloned a local temp directory.")
+              "entire repo will be cloned a local temp directory. Note2: "
+              "Exclusive with --path.")
     )
     p.add_argument(
         "--skeletor-config",
