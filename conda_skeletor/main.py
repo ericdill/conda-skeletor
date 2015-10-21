@@ -43,6 +43,7 @@ _PACKAGE_MAPPING = {
     'cv2': 'opencv',
     'yaml': 'pyyaml',
     'stdlib_list': 'stdlib-list',
+    'epics': 'pyepics',
 }
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
