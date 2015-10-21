@@ -484,6 +484,7 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         #     setup_info_dict = {}
     else:
         logger.info("No setup.py file found. Is this a python project?")
+        setup_info_dict = {}
 
     # grab the code out of the setup.py file to find its deps so that I can
     # parse the code for imports
