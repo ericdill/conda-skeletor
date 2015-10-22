@@ -44,6 +44,8 @@ _PACKAGE_MAPPING = {
     'yaml': 'pyyaml',
     'stdlib_list': 'stdlib-list',
     'epics': 'pyepics',
+    'xray_vision': 'xray-vision',
+    'IPython': 'ipython',
 }
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
