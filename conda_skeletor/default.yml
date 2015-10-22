@@ -1,0 +1,52 @@
+
+# REGEX
+# There are four types of regexes that conda-skeletor uses to help categorize
+# all of the files that are included in the repository.
+# 1. `test_regex`: regular expressions to find the testing files
+# 2. `ignore_path_regexers`: regular expressions that when matched cause the
+#    file to be ignored by conda-skeletor
+# 3. `extra_setup_regexers`: regular expressions to find the setup files.
+#    This is really only relevant when c extensions are compiled in a module
+#    named something like setupext.py
+# 4. `include_path_regexers`: regular expressions that instruct conda-skeletor
+#    to only include the files that match.
+#
+# The files are split like this:
+# All python modules are filtered by `ignore_path_regexers`.  Those that match
+# are the regex are currently ignored. Those that do not match are filtered by
+# the `extra_setup_regexers`. Those modules that match any `extra_setup_regex`
+# are used to determine the setup (build) dependencies.  Those that do not
+# match are then filtered by the `include_path_regexers`, if it exists.  If it
+# does, those that do not match are added to the modules that were ignored by
+# `ignore_path_regexers` and those that do match are passed to the `test_regex`.
+# Otherwise, `test_regex` filters all non-setup files.  The modules that do not
+# match `test_regex` are used to determine run time requirements.  The modules
+# that do match `test_regex` are used to determine the test time requirements
+# which are then combined with the run time requirements and dumped into the
+# conda build meta.yaml.
+test_regex:
+  - .*(test).*
+
+ignore_path_regexers:
+  - .*(doc).*
+  - .*(example).*
+  - .*(versioneer).*
+
+extra_setup_regexers:
+  - .*(setup).*
+
+#
+# include_path_regexers:
+#   - .*(lib_name).*
+
+# The list of packages to exclude from build/run/test requirements
+# blacklist_packages:
+  # - optional
+  # - libraries
+  # - to
+  # - ignore
+
+
+# When True, `generate_build_script` will create a build.sh in the output
+# directory passed to conda-skeletor
+# generate_build_script: True

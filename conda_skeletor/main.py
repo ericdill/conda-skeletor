@@ -50,8 +50,8 @@ _PACKAGE_MAPPING = {
 
 conda_skeletor_content = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(conda_skeletor_content, 'templates')
+DEFAULT_YAML_PATH = os.path.join(conda_skeletor_content, 'default.yml')
 del conda_skeletor_content
-
 
 def main():
     p = ArgumentParser(
@@ -357,6 +357,17 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         Directory in which the generated conda recipe is to be placed. Will be
         made if it does not already exist
     """
+    if source_path == '.':
+        source_path = os.path.abspath(source_path)
+    # load the default configuration info
+    skeletor_config = defaultdict(list)
+    with open(DEFAULT_YAML_PATH) as f:
+        skeletor_config.update(yaml.load(f.read()))
+
+    logger.info("\nDefault configuration"
+                "\n---------------------")
+    logger.info(pprint.pformat(skeletor_config))
+
 
     # make sure the skeletor_config_path is an absolute path
     skeletor_config_path = os.path.expanduser(skeletor_config_path)
