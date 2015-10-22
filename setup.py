@@ -11,7 +11,8 @@ setup(
     platforms='Cross platform (Linux, Mac OSX, Windows)',
     license="BSD",
     packages=setuptools.find_packages(),
-    package_data={'conda_skeletor.templates': ['*']},
+    package_data={'conda_skeletor.templates': ['*'],
+                  'conda_skeletor': ['*.yml']},
     include_package_data=True,
     install_requires=['setuptools', 'pyyaml', 'jinja2', 'depfinder'],
     entry_points={
