@@ -93,7 +93,7 @@ to be edited.
               "Exclusive with --path.")
     )
     p.add_argument(
-        "--skeletor-config",
+        "-c", "--skeletor-config",
         action="store",
         nargs='?',
         help=("Directory which contains the 'skeletor.yml' configuration file "
