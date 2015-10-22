@@ -26,7 +26,7 @@ except NameError:
 
 DEFAULT_BUILD_BASH = """#!/bin/bash
 $PYTHON setup.py build
-$PYTHON setup.py install"""
+$PYTHON setup.py install --single-version-externally-managed"""
 
 NPY_BUILD_STRING = ("{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}"
                     "py{{ py }}")
