@@ -3,7 +3,7 @@ from __future__ import print_function, absolute_import, division
 from argparse import ArgumentParser
 import os
 import re
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 import pprint
 import yaml
 import logging
@@ -462,14 +462,19 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         common_path = os.path.commonprefix(non_test_paths)
         logger.info('common_path = %s', common_path)
         lib_name = common_path.strip(os.sep).split(os.sep)[-1]
+        is_single_module_package = False
         if lib_name.endswith('.py'):
             logger.info("Found that lib_name ends with '.py'. This must be a"
                         "single-module package. Stripping the .py")
             lib_name = lib_name[:-3]
+            is_single_module_package = True
         logger.info("Leaving find_lib_name and returning %s", lib_name)
-        return lib_name
+        ret = namedtuple('ReturnVals',
+                         ['library_name', 'is_single_module_package'])
+        return ret(lib_name, is_single_module_package)
 
-    importable_lib_name = find_lib_name(without_tests)
+    ret = find_lib_name(without_tests)
+    importable_lib_name, is_single_module_package = ret
     skeletor_config['blacklist_packages'].append(importable_lib_name)
     # find the runtime deps
     run_requires = get_run_requires(
@@ -576,9 +581,11 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     template_info['test_requires'] = test_requires
 
     if 'test_imports' not in template_info:
-        template_info['test_imports'] = find_test_imports(importable_lib_name,
-                                                          without_tests)
-
+        if is_single_module_package:
+            test_imports = [importable_lib_name]
+        else:
+            test_imports = find_test_imports(importable_lib_name, without_tests)
+        template_info['test_imports'] = test_imports
     logger.info('\nTemplate Information'
                 '\n--------------------')
     logger.info(pprint.pformat(template_info))
