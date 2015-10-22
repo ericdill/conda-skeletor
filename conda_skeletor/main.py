@@ -267,6 +267,9 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
     logger.info('iterable_of_deps_tuples = %s', iterable_of_deps_tuples)
 
     def into_importable(full_module_path, lib_name):
+        if lib_name[-1] != os.sep:
+            lib_name += os.sep
+        logger.info("%s is going to be split on %s", full_module_path, lib_name)
         relative_module_path = full_module_path.split(lib_name)[-1]
         # trim the '.py'
         relative_module_path = relative_module_path[:-3]
