@@ -271,6 +271,7 @@ def find_test_imports(importable_lib_name, iterable_of_deps_tuples):
             lib_name += os.sep
         logger.info("%s is going to be split on %s", full_module_path, lib_name)
         relative_module_path = full_module_path.split(lib_name)[-1]
+        logger.info("relative_module_path = %s", relative_module_path)
         # trim the '.py'
         relative_module_path = relative_module_path[:-3]
         # add the library name back in
