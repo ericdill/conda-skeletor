@@ -311,6 +311,7 @@ def execute(args, parser):
         # run conda skeletor
         # subprocess.call(['git', 'checkout', old_git_tag], cwd=path)
         # subprocess.call(['git', 'stash', 'pop'], cwd=path)
+        path = os.path.abspath(path)
         libname = [s for s in path.split(os.sep) if s][-1]
         logger.info('path = %s' % path)
         logger.info('libname = %s' % libname)
