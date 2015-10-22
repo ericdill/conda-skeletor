@@ -415,23 +415,29 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     tests, without_tests = split_deps(included, test_regexers)
     logger.info('\nSplitting up the modules'
                 '\n------------------------')
-    logger.info('Ignored modules')
+    logger.info('\nIgnored modules'
+                '\n---------------')
     ignored_paths = [p[1] for p in ignored]
     logger.info(pprint.pformat(ignored_paths))
-    logger.info('Setup files')
+    logger.info('\nModules to scrape for build dependencies'
+                '\n----------------------------------------')
     setup_file_paths = [p[1] for p in setup_files]
     logger.info(pprint.pformat(setup_file_paths))
-    logger.info('Included')
+    logger.info('\nModules to split into test/run time'
+                '\n-----------------------------------')
     included_paths = [p[1] for p in included]
     logger.info(pprint.pformat(included_paths))
     if without_included:
-        logger.info('Excluded')
+        logger.info('\nExcluded'
+                    '\n--------')
         excluded_paths = [p[1] for p in without_included]
         logger.info(pprint.pformat(excluded_paths))
-    logger.info('Test files')
+    logger.info('\nModules to scrape for testing dependencies'
+                '\n------------------------------------------')
     test_paths = [p[1] for p in tests]
     logger.info(pprint.pformat(test_paths))
-    logger.info('Without test files')
+    logger.info('\nModules to scrape for runtime dependencies'
+                '\n------------------------------------------')
     without_test_paths = [p[1] for p in without_tests]
     logger.info(pprint.pformat(without_test_paths))
 
@@ -448,7 +454,7 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         str
             The name of the library (hopefully!)
         """
-        logger.info("Entering find_lib_name")
+        logger.info("\nEntering find_lib_name")
         non_test_paths = [path for name, path, catcher in without_tests]
         common_path = os.path.commonprefix(non_test_paths)
         logger.info('common_path = %s', common_path)
