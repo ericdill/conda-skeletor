@@ -24,12 +24,19 @@ except NameError:
     # python 2.7
     FileExistsError = OSError
 
+
 DEFAULT_BUILD_BASH = """#!/bin/bash
 $PYTHON setup.py build
-$PYTHON setup.py install --single-version-externally-managed"""
+$PYTHON setup.py install"""
+
+#TODO Use the setup.py wrapper to grab all setup.py info and then use
+# the package_data field to add this string to the setup.py install command
+HAS_PACKAGE_DATA = " --single-version-externally-managed --record=/dev/null"
+
 
 NPY_BUILD_STRING = ("{{ environ.get('GIT_BUILD_STR', '') }}_np{{ np }}"
                     "py{{ py }}")
+
 PY_BUILD_STRING = "{{ environ.get('GIT_BUILD_STR', '') }}_py{{ py }}"
 
 # keys are the package name (that you import)
