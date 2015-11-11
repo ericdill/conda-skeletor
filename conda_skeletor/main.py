@@ -576,7 +576,10 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
         run_requires.append(lib)
 
     run_requires = sorted(run_requires)
-    test_requires = sorted(set(test_requires + run_requires))
+
+    # conda build treats the test_requires sections as a superset of
+    # run_requires. No need to explicitly have a long list of test_requirements
+    test_requires = sorted(set(test_requires) - set(run_requires))
 
     template_info['run_requirements'] = run_requires
     template_info['test_requires'] = test_requires
