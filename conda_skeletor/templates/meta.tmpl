@@ -18,15 +18,15 @@ build:
 
 requirements:
   build:
-    - python{{ python_version_build }}{% for build_dep in build_requirements | sort %}
-    - {{ build_dep }}{% endfor %}
+    - python{{ python_version_build }}{% for dep in build_requirements | sort %}
+    - {{ dep }} # {{ lib_descriptions[dep] }}{% endfor %}
   run:
-    - python{{ python_version_build }}{% for run_dep in run_requirements | sort %}
-    - {{ run_dep }}{% endfor %}
+    - python{{ python_version_build }}{% for dep in run_requirements | sort %}
+    - {{ dep }} # {{ lib_descriptions[dep] }}{% endfor %}
 
 test:
-  {% if test_requires %}requires:{% for test_require in test_requires | sort %}
-    - {{ test_require }}{% endfor %}
+  {% if test_requires %}requires:{% for dep in test_requires | sort %}
+    - {{ dep }} # {{ lib_descriptions[dep] }}{% endfor %}
 {% endif %}
   {% if test_imports %}imports:{% for test_import in test_imports | sort %}
     - {{ test_import }}{% endfor %}
