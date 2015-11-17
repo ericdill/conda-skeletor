@@ -18,28 +18,22 @@ build:
 requirements:
   build:
     - python
-    - numpy
-    - setuptools
-    - six
+    - numpy # array processing for numbers, strings, records, and objects. (conda)
+    - setuptools # Easily download, build, install, upgrade, and uninstall Python packages (conda)
+    - six # Python 2 and 3 compatibility utilities (conda)
   run:
     - python
-    - lmfit
-    - netcdf4
-    - numpy
-    - scipy
-    - six
-    - xraylib
+    - lmfit # Least-Squares Minimization with Bounds and Constraints (pypi)
+    - netcdf4 # python/numpy interface to netCDF library (conda)
+    - numpy # array processing for numbers, strings, records, and objects. (conda)
+    - scipy # Scientific Library for Python (conda)
+    - six # Python 2 and 3 compatibility utilities (conda)
+    - xraylib # No package info found for xraylib at any of these locations: ['conda', 'pypi']
 
 test:
   requires:
-    - lmfit
-    - netcdf4
-    - nose
-    - numpy
-    - scikit-image
-    - scipy
-    - six
-    - xraylib
+    - nose # nose extends unittest to make testing easier (conda)
+    - scikit-image # Image processing routines for SciPy (conda)
 
   imports:
     - skxray
