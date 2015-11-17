@@ -12,7 +12,7 @@ CONDA_URL = 'http://repo.continuum.io/pkgs/metadata.json'
 conda_info = None
 
 
-def description(package_name, pypi_first=False):
+def description(package_name, pypi_first=False, split_on_whitespace=True):
     """Get the short summary description of the library called `package_name`
 
     Parameters
@@ -24,8 +24,14 @@ def description(package_name, pypi_first=False):
         Defaults to True.
         If True: Search pypi for the summary first.
         If False: Search conda for the summary first.
+    split_on_whitespace : bool, optional
+        Defaults to True.
+        You would want to split on whitespace if your library has a specified
+        version, such as 'pymongo <3'.
     """
     call_order = [('pypi', _pypi), ('conda', _conda)]
+    if split_on_whitespace:
+        package_name = package_name.split(' ')[0]
 
     if not pypi_first:
         call_order.reverse()
