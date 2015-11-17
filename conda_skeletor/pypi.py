@@ -38,7 +38,7 @@ def description(package_name, pypi_first=False):
             pass
         else:
             # format the summary string and quit the for loop
-            summary = '(%s) %s' % (identifier, summary_string)
+            summary = '%s (%s)' % (summary_string, identifier)
             break
 
     if not summary:
