@@ -568,10 +568,13 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     # remap deps
     for k, v in _PACKAGE_MAPPING.items():
         if k in run_requires:
+            logger.info("remapping %s -> %s in run_requires" % (k, v))
             run_requires[run_requires.index(k)] = v
         if k in test_requires:
+            logger.info("remapping %s -> %s in test_requires" % (k, v))
             test_requires[test_requires.index(k)] = v
         if k in build_requirements:
+            logger.info("remapping %s -> %s in build_requires" % (k, v))
             build_requirements[build_requirements.index(k)] = v
 
     template_info['build_requirements'] = build_requirements
