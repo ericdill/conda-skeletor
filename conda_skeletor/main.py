@@ -11,9 +11,10 @@ import tempfile
 import subprocess
 import shutil
 from jinja2 import Environment, FileSystemLoader
-from . import git
 import depfinder
+from . import git
 from . import setup_parser
+from . import pypi
 
 logger = logging.getLogger(__name__)
 
@@ -567,10 +568,13 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
     # remap deps
     for k, v in _PACKAGE_MAPPING.items():
         if k in run_requires:
+            logger.info("remapping %s -> %s in run_requires" % (k, v))
             run_requires[run_requires.index(k)] = v
         if k in test_requires:
+            logger.info("remapping %s -> %s in test_requires" % (k, v))
             test_requires[test_requires.index(k)] = v
         if k in build_requirements:
+            logger.info("remapping %s -> %s in build_requires" % (k, v))
             build_requirements[build_requirements.index(k)] = v
 
     template_info['build_requirements'] = build_requirements
@@ -590,7 +594,16 @@ def execute_programmatically(skeletor_config_path, source_path, output_dir):
 
     template_info['run_requirements'] = run_requires
     template_info['test_requires'] = test_requires
-
+    template_info['lib_descriptions'] = {}
+    # grab the package description from pypi if it exists
+    for lib_name in (set(template_info['run_requirements'] +
+                         template_info['test_requires'] +
+                         template_info['build_requirements'])):
+        try:
+            description = pypi.description(lib_name)
+        except ValueError:
+            description = "A description for %s is not available on pypi" % lib_name
+        template_info['lib_descriptions'][lib_name] = description
     if 'test_imports' not in template_info:
         if is_single_module_package:
             test_imports = [importable_lib_name]

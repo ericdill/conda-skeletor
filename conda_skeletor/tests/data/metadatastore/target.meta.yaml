@@ -21,24 +21,18 @@ requirements:
     - python
   run:
     - python
-    - boltons
-    - mongoengine
-    - pymongo <3
-    - pytz
-    - pyyaml
-    - six
+    - boltons # When they're not builtins, they're boltons. (pypi)
+    - mongoengine # MongoEngine is a Python Object-Document Mapper for working with MongoDB. (pypi)
+    - pymongo <3 # Python driver for MongoDB (conda)
+    - pytz # World timezone definitions, modern and historical (conda)
+    - pyyaml # YAML parser and emitter for Python (conda)
+    - six # Python 2 and 3 compatibility utilities (conda)
 
 test:
   requires:
-    - boltons
-    - coverage
-    - mongoengine
-    - nose
-    - numpy
-    - pymongo <3
-    - pytz
-    - pyyaml
-    - six
+    - coverage # Code coverage measurement for Python (conda)
+    - nose # nose extends unittest to make testing easier (conda)
+    - numpy # array processing for numbers, strings, records, and objects. (conda)
 
   imports:
     - metadatastore

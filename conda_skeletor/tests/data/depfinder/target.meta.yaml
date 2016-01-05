@@ -18,18 +18,17 @@ build:
 requirements:
   build:
     - python
-    - setuptools
-    - stdlib-list
+    - setuptools # Easily download, build, install, upgrade, and uninstall Python packages (conda)
+    - stdlib-list # A list of Python Standard Libraries (2.6-7, 3.2-5). (pypi)
   run:
     - python
-    - stdlib-list
+    - stdlib-list # A list of Python Standard Libraries (2.6-7, 3.2-5). (pypi)
 
 test:
   requires:
-    - nbformat
-    - pytest
-    - stdlib-list
-    - test_with_code
+    - nbformat # the base implementation of the Jupyter Notebook format (conda)
+    - pytest # simple powerful testing with Python (conda)
+    - test_with_code # No package info found for test_with_code at any of these locations: ['conda', 'pypi']
 
   imports:
     - depfinder
